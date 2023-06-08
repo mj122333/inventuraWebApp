@@ -10,52 +10,35 @@
 </head>
 
 <body>
-    <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-        <input type="text" name="koliko">
-        <input type="submit" value="submit">
-    </form>
 
     <div class="popis">
-        <ul>
-            <li>popis item</li>
-            <li>popis item</li>
-            <?php
-            $popis = array();
-            if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                $k = $_POST['koliko'];
-                if (empty($k)) {
-                    echo "Input is empty";
-                } else {
-                    for ($i = 0; $i < $k; $i++) {
-                        array_push($popis, $i);
-                    }
-                }
-            }
-
-            if ($_SERVER["REQUEST_METHOD"] == "GET") {
-                $k = $_GET['koliko'];
-                if (empty($k)) {
-                    echo "Input is empty";
-                } else {
-                    for ($i = 0; $i < $k; $i++) {
-                        array_push($popis, $i);
-                    }
-                }
-                header("Content-Type: application/json");
-
-                echo strval(rand(0, 10));
-
-                $myfile = fopen("testfile.txt", "w");
-                fwrite($myfile, "radi");
-            }
-
-            for ($i = 0; $i < count($popis); $i++) {
-                echo "<li>$popis[$i]</li>";
-            }
-            ?>
-        </ul>
+        <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+            <input type="text" name="kod">
+            <!-- <input type="text" name="id_proizvoda"> -->
+            <input type="submit" value="submit">
+        </form>
     </div>
 
+    <?php
+    $servername = "localhost";
+    $username = "vito";
+    $password = "micko";
+    $dbname = "inventura";
+
+    $conn = new mysqli($servername, $username, $password, $dbname);
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $scannedValue = $_POST['kod'];
+        if (!empty($scannedValue)) {
+            // echo "<p>$scannedValue</p>";
+            $sql = "INSERT INTO test (id) VALUES (" . $scannedValue . ")";
+            mysqli_query($conn, $sql);
+            $myfile = fopen("testfile.txt", "a");
+            fwrite($myfile, $scannedValue . " ");
+        }
+    }
+
+    ?>
 
 
 </body>

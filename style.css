@@ -25,7 +25,12 @@ body {
     border-radius: 5px;
 }
 
+
 ul {
     color: white;
     list-style-type: none;
+}
+
+p {
+    color: wheat;
 }

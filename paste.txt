@@ -1,0 +1,48 @@
+<?php
+            $servername = "localhost";
+            $username = "vito";
+            $password = "micko";
+            $dbname = "inventura";
+
+            $conn = new mysqli($servername, $username, $password, $dbname);
+
+            $popis = array();
+            if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                $k = $_POST['koliko'];
+                if (empty($k)) {
+                    echo "Input is empty";
+                } else {
+                    for ($i = 0; $i < $k; $i++) {
+                        array_push($popis, $i);
+                    }
+                }
+                $sql = "INSERT INTO test (id) VALUES (" . $k . ")";
+                mysqli_query($conn, $sql);
+                $myfile = fopen("testfile.txt", "a");
+                fwrite($myfile, $k . " ");
+            }
+
+            if ($_SERVER["REQUEST_METHOD"] == "GET") {
+                $k = $_GET['koliko'];
+                if (empty($k)) {
+                    echo "Input is empty";
+                } else {
+                    for ($i = 0; $i < $k; $i++) {
+                        array_push($popis, $i);
+                    }
+                }
+                // header("Content-Type: application/json");
+
+                echo strval(rand(0, 10));
+
+                $myfile = fopen("testfile.txt", "a");
+                fwrite($myfile, $k . " ");
+
+                $sql = "INSERT INTO test (id) VALUES (" . $k . ")";
+                mysqli_query($conn, $sql);
+            }
+
+            for ($i = 0; $i < count($popis); $i++) {
+                echo "<li>$popis[$i]</li>";
+            }
+            ?>
