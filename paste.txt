@@ -1,48 +1,81 @@
 <?php
-            $servername = "localhost";
-            $username = "vito";
-            $password = "micko";
-            $dbname = "inventura";
+include "db_config.php";
+?>
 
-            $conn = new mysqli($servername, $username, $password, $dbname);
+<!DOCTYPE html>
+<html lang="en">
 
-            $popis = array();
-            if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                $k = $_POST['koliko'];
-                if (empty($k)) {
-                    echo "Input is empty";
-                } else {
-                    for ($i = 0; $i < $k; $i++) {
-                        array_push($popis, $i);
-                    }
-                }
-                $sql = "INSERT INTO test (id) VALUES (" . $k . ")";
-                mysqli_query($conn, $sql);
-                $myfile = fopen("testfile.txt", "a");
-                fwrite($myfile, $k . " ");
-            }
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Inventura</title>
+</head>
 
-            if ($_SERVER["REQUEST_METHOD"] == "GET") {
-                $k = $_GET['koliko'];
-                if (empty($k)) {
-                    echo "Input is empty";
-                } else {
-                    for ($i = 0; $i < $k; $i++) {
-                        array_push($popis, $i);
-                    }
-                }
-                // header("Content-Type: application/json");
+<body>
 
-                echo strval(rand(0, 10));
+    <div class="popis">
+        <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+            <input type="text" name="kod">
+            <!-- <input type="text" name="id_proizvoda"> -->
+            <input type="submit" value="submit">
+        </form>
+    </div>
 
-                $myfile = fopen("testfile.txt", "a");
-                fwrite($myfile, $k . " ");
+    <?php
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $scannedValue = $_POST['kod'];
+        if (!empty($scannedValue)) {
+            // echo "<p>$scannedValue</p>";
+            $sql = "INSERT INTO test (id) VALUES (" . $scannedValue . ")";
+            mysqli_query($conn, $sql);
+            $myfile = fopen("testfile.txt", "a");
+            fwrite($myfile, $scannedValue . " ");
+        }
+    }
+    ?>
 
-                $sql = "INSERT INTO test (id) VALUES (" . $k . ")";
-                mysqli_query($conn, $sql);
-            }
 
-            for ($i = 0; $i < count($popis); $i++) {
-                echo "<li>$popis[$i]</li>";
-            }
-            ?>
+</body>
+
+</html>
+
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 100vh;
+    background-color: #010409;
+}
+
+.popis {
+    width: 50%;
+    height: 80%;
+    overflow-x: auto;
+    padding: 4px 8px;
+
+    background-color: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 5px;
+}
+
+
+ul {
+    color: white;
+    list-style-type: none;
+}
+
+p {
+    color: wheat;
+}

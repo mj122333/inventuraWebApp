@@ -5,6 +5,8 @@ import mysql.connector
 from mysql.connector import Error
 import pandas as pd
 
+folder_path = "barcodes/"
+
 db = mysql.connector.connect(
     host="localhost",
     user="vito",
@@ -22,7 +24,8 @@ column_names = cursor.column_names
 for row in result:
     ID = row[column_names.index('id')]
     code = EAN13(ID, writer=ImageWriter())
-    code.save("code_{}".format(ID))
+    code.save(folder_path + "code_{}".format(ID))
+    break
 
 db.commit()
 
