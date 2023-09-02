@@ -1,0 +1,36 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 100vh;
+    background-color: #010409;
+}
+
+.popis {
+    width: 50%;
+    height: 80%;
+    overflow-x: auto;
+    padding: 4px 8px;
+
+    background-color: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 5px;
+}
+
+
+ul {
+    color: white;
+    list-style-type: none;
+}
+
+p {
+    color: wheat;
+}
