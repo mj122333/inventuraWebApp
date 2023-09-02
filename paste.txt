@@ -1,3 +1,5 @@
+<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>
+
 <?php
 include "db_config.php";
 ?>
