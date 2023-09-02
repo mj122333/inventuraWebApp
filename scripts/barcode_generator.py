@@ -5,7 +5,7 @@ import mysql.connector
 from mysql.connector import Error
 import pandas as pd
 
-folder_path = "barcodes/"
+folder_path = "../barcodes/"
 
 db = mysql.connector.connect(
     host="localhost",
