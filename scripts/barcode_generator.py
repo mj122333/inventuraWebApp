@@ -8,10 +8,7 @@ import pandas as pd
 folder_path = "../barcodes/"
 
 db = mysql.connector.connect(
-    host="localhost",
-    user="vito",
-    password="micko",
-    database="inventura"
+    host="localhost", user="vito", password="micko", database="inventura"
 )
 
 cursor = db.cursor()
@@ -22,7 +19,7 @@ result = cursor.fetchall()
 column_names = cursor.column_names
 
 for row in result:
-    ID = row[column_names.index('id')]
+    ID = row[column_names.index("id")]
     code = EAN13(ID, writer=ImageWriter())
     code.save(folder_path + "code_{}".format(ID))
     break

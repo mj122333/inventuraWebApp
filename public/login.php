@@ -60,6 +60,7 @@
 </head>
 
 <?php
+
 $nameErr = $emailErr = $passwordErr = $loginErr = $loginSuccess = "";
 $username = $email = $password = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -68,16 +69,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST['password'];
 
     $sql = "SELECT id, username, role FROM users WHERE username = ? AND password = ?";
-    $stmt = $conn->prepare($sql);
     $pass_hash = md5($password);
-    $stmt->bind_param("ss", $username, $pass_hash);
+    $result = $db->select($sql, array($username, $pass_hash));
 
-    if ($stmt->execute()) {
-        $rows = $stmt->get_result();
-        if (mysqli_num_rows($rows) === 1) {
+    if ($result) {
+        if ($result["row_count"] === 1) {
 
-
-            $result = $rows->fetch_assoc();
+            $result = $result['result'][0];
 
             $loginSuccess = "Prijava uspješna, <b>" . $result["username"] . "</b>";
             $_SESSION["username"] = $result["username"];
@@ -93,26 +91,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             setcookie('sessionid', $token, $expiry, '/');
 
             $sql = "SELECT * FROM session_cookies WHERE user_id = ?";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("s", $userID);
-            $stmt->execute();
-            $rows = $stmt->get_result();
-            if (mysqli_num_rows($rows) === 1) {
-                $result = $rows->fetch_assoc();
+            $result = $db->select($sql, array($userID));
+
+
+            if ($result["row_count"] === 1) {
                 $sql = "UPDATE session_cookies SET token = ?, expiry = ? WHERE user_id = ?";
-                $stmt = $conn->prepare($sql);
-                $stmt->bind_param("sss", $token, $expiry_sql_format, $userID);
-                $stmt->execute();
+                $db->update($sql, array($token, $expiry_sql_format, $userID));
             } else {
                 $sql = "INSERT INTO session_cookies (user_id, expiry, token) VALUES (?, ?, ?)";
-                $stmt = $conn->prepare($sql);
-                $stmt->bind_param("sss", $userID, $expiry_sql_format, $token);
-                $stmt->execute();
+                $db->insert($sql, array($userID, $expiry_sql_format, $token));
             }
 
             $_SESSION["login_message"] = "Prijava uspješna, dobrodošli ";
 
-            header("Location: home");
+            header("Location: profile");
             exit;
         } else {
             $loginErr = "Krivo korisničko ime ili lozinka";
@@ -149,7 +141,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </form>
 
         <small>Nemate račun?</small>
-        <a href="register.php" class="link-secondary link-underline-secondary link-underline-opacity-0 link-underline-opacity-75-hover"><small>Kreirajte ga!</small></a>
+        <a href="register" class="link-secondary link-underline-secondary link-underline-opacity-0 link-underline-opacity-75-hover"><small>Kreirajte ga!</small></a>
     </div>
     <!-- <img src="assets/smartphone_mockup.svg" alt=""> -->
 

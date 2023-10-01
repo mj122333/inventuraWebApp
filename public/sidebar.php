@@ -5,11 +5,11 @@
     <hr>
     <ul class="nav nav-pills flex-column mb-auto">
         <li class="nav-item">
-            <a href="#" class="nav-link text-white" aria-current="page">
+            <a href="#" class="nav-link text-white bg-success" aria-current="page">
                 <!-- <svg class="bi me-2" width="16" height="16">
                                 <use xlink:href="#home"></use>
                             </svg> -->
-                Home
+                Početna
             </a>
         </li>
         <li>
@@ -19,17 +19,17 @@
         </li>
         <li>
             <a href="#" class="nav-link text-white">
-                Orders
-            </a>
-        </li>
-        <li>
-            <a href="#" class="nav-link text-white bg-success">
-                Products
+                Ljudi
             </a>
         </li>
         <li>
             <a href="#" class="nav-link text-white">
-                Customers
+                Učionice
+            </a>
+        </li>
+        <li>
+            <a href="#" class="nav-link text-white">
+                <?= "route: " . $route ?>
             </a>
         </li>
     </ul>

@@ -14,7 +14,7 @@
     </style>
 
     <div class="container-fluid">
-        <a class="navbar-brand" href="./">Početna</a>
+        <a class="navbar-brand" href="home">Početna</a>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
@@ -34,7 +34,7 @@
             </ul>
 
             <div class="parent-container">
-                <img src="./barcodes/code_322549918537.png" alt="barcode alt">
+                <img src="barcodes/code_165197697230.png" alt="barcode alt">
             </div>
             <?php if (isset($_COOKIE["sessionid"])) : ?>
                 <a class="nav-link" href="logout">Odjava</a>

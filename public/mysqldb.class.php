@@ -13,6 +13,7 @@ class MySQLDB
     function __construct()
     {
         $this->connect();
+        $this->mysql_error("CONNECT", "connected");
     }
 
     function get_db()
@@ -27,11 +28,23 @@ class MySQLDB
     {
 
         try {
-            $conn = new mysqli($this->host, $this->username, $this->password, $this->database);
-            $this->db = $conn;
-        } catch (mysqli_sql_exception $e) {
-            $this->mysql_error("CONNECT", $e->getMessage()); // TODO cant report error wihtout connection
+            $dsn = "mysql:host={$this->host};dbname={$this->database}";
+            $options = array(
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_EMULATE_PREPARES => false,
+            );
+
+            $this->db = new PDO($dsn, $this->username, $this->password, $options);
+        } catch (PDOException $e) {
+            $this->mysql_error("CONNECT", $e->getMessage());
         }
+
+        // try {
+        //     $conn = new mysqli($this->host, $this->username, $this->password, $this->database);
+        //     $this->db = $conn;
+        // } catch (mysqli_sql_exception $e) {
+        //     $this->mysql_error("CONNECT", $e->getMessage()); // TODO cant report error wihtout connection
+        // }
     }
 
     function select($query, $params = array())
@@ -110,7 +123,7 @@ class MySQLDB
     function mysql_error($query, $msg)
     {
         $db = $this->get_db();
-        $stmt = $db->prepare("INSERT INTO mysql_errors (query, msg) VALUES (?, ?)");
+        $stmt = $db->prepare("INSERT INTO mysql_errors (query, message) VALUES (?, ?)");
         $stmt->execute(array($query, $msg));
     }
 }

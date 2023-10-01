@@ -1,5 +1,5 @@
 <?php
-include "db_config.php";
+include "config/db_config.php";
 
 if (isset($_COOKIE["sessionid"])) {
     header("Location: home.php");
@@ -71,9 +71,11 @@ if (isset($_COOKIE["sessionid"])) {
 
 <?php
 $nameErr = $emailErr = $passwordErr = $loginErr = $loginSuccess = "";
-$username = $email = $password = "";
+$username = $email = $password = $ime = $prezime = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
+    $ime = $_POST['ime'];
+    $prezime = $_POST['prezime'];
     $username = $_POST['username'];
     $email = $_POST['email'];
     $password = $_POST['password'];
@@ -101,10 +103,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $admin_username = $result["pozivatelj"];
 
                 $role = "user";
-                $sql = "INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)";
+                $sql = "INSERT INTO users (ime, prezime, username, email, password, role) VALUES (?, ?, ?, ?, ?, ?)";
                 $stmt = $conn->prepare($sql);
                 $pass_hash = md5($password);
-                $stmt->bind_param("ssss", $username, $email, $pass_hash, $role);
+                $stmt->bind_param("ssss", $ime, $prezime, $username, $email, $pass_hash, $role);
 
                 if ($stmt->execute()) {
                     $loginSuccess = "Pozvao vas je admin <b>" . $admin_username . "</b>, sad se možete prijaviti";
@@ -149,6 +151,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <?php endif; ?>
 
             <div class="input-group mb-3">
+                <span class="input-group-text">ime</span>
+                <input required type="text" class="form-control" name="ime" value="<?php echo $ime; ?>" placeholder="ime">
+            </div>
+
+            <div class="input-group mb-3">
+                <span class="input-group-text">prezime</span>
+                <input required type="text" class="form-control" name="prezime" value="<?php echo $prezime; ?>" placeholder="prezime">
+            </div>
+
+            <div class="input-group mb-3">
                 <span class="input-group-text">e-mail</span>
                 <input required type="text" class="form-control <?php echo ($emailErr) ? 'is-invalid' : ''; ?>" name="email" value="<?php echo $email; ?>" placeholder="e-mail">
             </div>
@@ -181,7 +193,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </form>
 
         <small>Imate račun?</small>
-        <a href="login.php" class="link-secondary link-underline-secondary link-underline-opacity-0 link-underline-opacity-75-hover"><small>Prijavite se!</small></a>
+        <a href="login" class="link-secondary link-underline-secondary link-underline-opacity-0 link-underline-opacity-75-hover"><small>Prijavite se!</small></a>
     </div>
 
     <script>

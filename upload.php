@@ -1,5 +1,6 @@
 <?php
-include "db_config.php";
+include "config/config.php";
+include "public/config/db_config.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
@@ -12,8 +13,6 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
         fwrite($myfile, $_GET["value"] . " ");
     }
     http_response_code(200);
-    header("Location: home.php");
-    exit;
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
