@@ -2,8 +2,8 @@
 
 
 session_start();
-require_once "config/config.php";
-require_once "mysqldb.class.php";
+// require_once "config/config.php";
+// require_once "mysqldb.class.php";
 
 $db = new MySQLDB();
 
