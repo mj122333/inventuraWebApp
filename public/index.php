@@ -18,7 +18,7 @@ $routes = [
     "register" => "register.php"
 ];
 
-echo $route;
+// echo $route;
 
 if (isset($_COOKIE["sessionid"]) || $route == "login" || $route == "register") {
     if (array_key_exists($route, $routes)) {
