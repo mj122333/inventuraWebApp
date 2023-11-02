@@ -38,6 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
     <title>Admin</title>
+    <script src="js/delete_items.js"></script>
 </head>
 
 <style>
@@ -63,49 +64,56 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
         <?php include 'header.php'; ?>
 
         <main class="d-flex flex-row h-100">
+
             <?php include 'sidebar.php'; ?>
+
             <div class="container-fluid row p-5 mx-0 h-100">
                 <!-- <div class="border h-50 overflow-auto"> -->
-                <div class="border table-wrapper-scroll-y my-custom-scrollbar">
-                    <table class="table table-dark table-hover">
-                        <thead class="position-sticky" style="top: 0;">
-                            <tr>
-                                <th scope="col">Obriši</th>
-                                <th>ID</th>
-                                <th>proizvod_id</th>
-                                <th>ucionica_id</th>
-                                <th>datum</th>
-                                <th>vrijeme</th>
-                                <th>user_id</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $sql = "SELECT * FROM evidencija";
-                            $result = $db->select($sql);
+                <form id="form" onsubmit="return false;">
 
-                            if ($result["row_count"] > 0) {
-                                foreach ($result["result"] as $row) { ?>
-                                    <tr class="bg-success">
-                                        <th>
-                                            <input class="form-check-input" type="checkbox" value="">
-                                        </th>
-                                        <th scope="row"><?= $row["id"] ?></th>
-                                        <td><?= $row["proizvod_id"] ?></td>
-                                        <td><?= $row["ucionica_id"] ?></td>
-                                        <td><?= $row["datum"] ?></td>
-                                        <td><?= $row["vrijeme"] ?></td>
-                                        <td><?= $row["user_id"] ?></td>
-                                    </tr>
+                    <div class="border table-wrapper-scroll-y my-custom-scrollbar">
+                        <table class="table table-dark table-hover">
+                            <thead class="position-sticky" style="top: 0;">
+                                <tr>
+                                    <th scope="col">Obriši</th>
+                                    <th>ID</th>
+                                    <th>proizvod_id</th>
+                                    <th>ucionica_id</th>
+                                    <th>datum</th>
+                                    <th>vrijeme</th>
+                                    <th>user_id</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $sql = "SELECT * FROM evidencija";
+                                $result = $db->select($sql);
 
-                            <?php }
-                            } else {
-                                echo "0 results";
-                            }
-                            ?>
-                        </tbody>
-                    </table>
-                </div>
+                                if ($result["row_count"] > 0) {
+                                    foreach ($result["result"] as $row) { ?>
+                                        <tr class="bg-success">
+                                            <th>
+                                                <input class="form-check-input" type="checkbox" value="<?= $row["id"] ?>">
+                                            </th>
+                                            <th scope="row"><?= $row["id"] ?></th>
+                                            <td><?= $row["proizvod_id"] ?></td>
+                                            <td><?= $row["ucionica_id"] ?></td>
+                                            <td><?= $row["datum"] ?></td>
+                                            <td><?= $row["vrijeme"] ?></td>
+                                            <td><?= $row["user_id"] ?></td>
+                                        </tr>
+
+                                <?php }
+                                } else {
+                                    echo "0 results";
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
+                    <button class="btn btn-success fw-bold" type="submit" onclick="deleteItems()">POTVRDI PROMJENE</button>
+                    <p id="serverResponse"></p>
+                </form>
 
             </div>
         </main>

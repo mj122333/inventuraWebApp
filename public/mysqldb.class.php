@@ -63,7 +63,6 @@ class MySQLDB
             }
         } catch (mysqli_sql_exception $e) {
             $this->mysql_error("SELECT", $e->getMessage());
-            echo $e;
         }
 
         return $result;
@@ -81,7 +80,6 @@ class MySQLDB
             $result['result'] = $stmt->fetch();
         } catch (mysqli_sql_exception $e) {
             $this->mysql_error("SELECT", $e->getMessage());
-            echo $e;
         }
 
         return $result;
