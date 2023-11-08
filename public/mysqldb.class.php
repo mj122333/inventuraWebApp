@@ -13,7 +13,7 @@ class MySQLDB
     function __construct()
     {
         $this->connect();
-        $this->mysql_error("CONNECT", "connected");
+        // $this->mysql_error("CONNECT", "connected");
     }
 
     function get_db()

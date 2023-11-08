@@ -1,4 +1,4 @@
-INSERT INTO your_table_name (proizvod_id, ucionica_id, datum, vrijeme, user_id)
+INSERT INTO evidencija (proizvod_id, ucionica_id, datum, vrijeme, user_id)
 SELECT
 FLOOR(RAND() * 100) + 1, -- Random proizvod_id between 1 and 100
 FLOOR(RAND() * 100) + 1, -- Random ucionica_id between 1 and 100
