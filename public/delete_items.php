@@ -4,6 +4,8 @@ require_once "mysqldb.class.php";
 
 $db = new MySQLDB();
 
+// $db->mysql_error("delete", "items");
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $data = json_decode(file_get_contents('php://input'), true);
@@ -18,24 +20,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $db->delete("DELETE FROM evidencija WHERE id=?", array($id));
             }
 
-            // Respond with a JSON message containing the IDs that were deleted
+            // vraca ID-je koji su izbrisani
             $response = array(
                 'message' => 'Items deleted successfully',
                 'deletedItems' => $deletedItems
             );
             echo json_encode($response);
         } else {
-            // Invalid JSON data
+            // krivi podaci, JSON nije array
             http_response_code(400);
             echo json_encode(array('error' => 'Invalid JSON data'));
         }
     } else {
-        // Invalid JSON format or unable to read JSON data
+        // krivi JSON format ili nemoze procitati
         http_response_code(400);
         echo json_encode(array('error' => 'Invalid JSON format or unable to read data'));
     }
 } else {
-    // Invalid request method
+    // ako nije POST
     http_response_code(405);
     echo json_encode(array('error' => 'Invalid request method'));
 }

@@ -1,5 +1,16 @@
 function deleteItems() {
 
+    function getCookie(name) {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith(name + '=')) {
+                return cookie.substring(name.length + 1);
+            }
+        }
+        return null;
+    }
+
 
     var form = document.getElementById('form');
     var checkboxes = form.querySelectorAll('input[type="checkbox"]:checked');
@@ -13,19 +24,22 @@ function deleteItems() {
     });
 
     jsonArray = JSON.stringify(ids);
-    console.log(jsonArray)
+    // console.log(jsonArray)
 
+    const sessionCookie = getCookie("sessionid");
+    // console.log(sessionCookie)
     const requestOptions = {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'Cookie': 'sessionid=' + sessionCookie,
         },
         body: jsonArray
     };
 
-    var url = "public/delete_items.php";
+    var url = "delete_items";
     fetch(url, requestOptions)
-        .then(response => response.json())
+        .then(response => response.text())
         .then(data => {
             location.reload();
 
