@@ -87,7 +87,7 @@
         <div class="alert alert-danger m-0">
             <span class="fw-bold">404 Not Found:&nbsp;</span>ova stranica ne postoji
         </div>
-        <a href="home" class="link-secondary link-underline-opacity-0"><small>Natrag na početnu</small></a>
+        <a href="/inventura/home" class="link-secondary link-underline-opacity-0"><small>Natrag na početnu</small></a>
         <!-- link-underline-secondary link-underline-opacity-75-hover -->
     </div>
 </body>
