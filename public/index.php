@@ -10,7 +10,6 @@ $db = new MySQLDB();
 
 // $route = isset($_GET["route"]) ? split_url($_GET["route"])[0] : "home";
 $route = isset($_GET["route"]) ? $_GET["route"] : "home";
-
 // $db->mysql_error("ROUTE", $route);
 $routes = [
     "home" => "home.php",
@@ -18,10 +17,7 @@ $routes = [
     "admin" => array(
         "test" => "test.php"
     ),
-    "asd" => array(
-        "test" => "test.php"
-        
-    ),
+    "asd" => "asd.php",
     "login" => "login.php",
     "logout" => "logout.php",
     "register" => "register.php",
@@ -30,10 +26,11 @@ $routes = [
 ];
 
 
-print_r($_GET['route'] . "<br>");
-$url = split_url($_GET['route']);
+
+// print_r($_GET['route'] . "<br>");
+$url = split_url($route);
 print_r($url);
-exit;
+// exit;
 function return_route($prev, $routes, $url)
 {
     foreach ($url as $part) {
