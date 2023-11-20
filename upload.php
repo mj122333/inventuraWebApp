@@ -9,8 +9,8 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("s", $_GET["value"]);
         $stmt->execute();
-        $myfile = fopen("testfile.txt", "a");
-        fwrite($myfile, $_GET["value"] . " ");
+        // $myfile = fopen("testfile.txt", "a");
+        // fwrite($myfile, $_GET["value"] . " ");
     }
     http_response_code(200);
 }
@@ -22,8 +22,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("s", $_POST["value"]);
         $stmt->execute();
-        $myfile = fopen("testfile.txt", "a");
-        fwrite($myfile, $_POST["value"] . " ");
+        // $myfile = fopen("testfile.txt", "a");
+        // fwrite($myfile, $_POST["value"] . " ");
 
         $currentDate = date('Y-m-d');
         $currentTime = date('H:i:s');

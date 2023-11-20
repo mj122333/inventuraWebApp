@@ -1,8 +1,38 @@
 
+# <IfModule mod_rewrite.c>
+# RewriteEngine On
+
+# RewriteRule ^$ public/ [L]
+# RewriteRule (.*) public/$1 [L]
+# </IfModule>
+
+# <IfModule mod_rewrite.c>
+#     RewriteEngine On
+
+#     # Redirect all requests to index.php
+#     # RewriteRule ^ index.php [L]
+#     RewriteRule ^(.*)$ index.php?route=$1 [L]
+# </IfModule>
+
+
 <IfModule mod_rewrite.c>
 RewriteEngine On
-
-RewriteRule ^$ public/ [L]
-RewriteRule (.*) public/$1 [L]
+ 
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+ 
+# Rewrite all other URLs to index.php/URL
+RewriteRule ^(.*)$ index.php?route=$1 [PT,L]
 </IfModule>
 
+
+
+# sa CHATgpta
+
+# <IfModule mod_rewrite.c>
+#     RewriteEngine On
+
+#     # Redirect all requests to index.php
+#     # RewriteRule ^ index.php [L]
+#     RewriteRule ^(.*)$ index.php?route=$1 [L]
+# </IfModule>
