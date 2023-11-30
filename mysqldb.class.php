@@ -79,7 +79,7 @@ class MySQLDB
             $result['row_count'] = $stmt->rowCount();
             $result['result'] = $stmt->fetch();
         } catch (mysqli_sql_exception $e) {
-            $this->mysql_error("SELECT", $e->getMessage());
+            $this->mysql_error("SELECT ONE", $e->getMessage());
         }
 
         return $result;

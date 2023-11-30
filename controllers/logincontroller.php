@@ -54,6 +54,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 
+function login_with_cookie($cookie)
+{
+    
+}
+
+
 
 echo basename(__FILE__, '.php');
 

@@ -6,23 +6,31 @@ require_once "config/config.php";
 require_once "mysqldb.class.php";
 require_once "functions.php";
 
+// dd($_SERVER["REQUEST_URI"]);
+
+
+$url = parse_url($_SERVER["REQUEST_URI"])["path"];
+// $query = parse_url($_SERVER["REQUEST_URI"])["query"];
+$url = short_url($url);
+// echo "<img src='barcodes/code_165197697230.png' />";
+// dd(parse_url($_SERVER["REQUEST_URI"]));
+
+
+// dd($url);
+
 $db = new MySQLDB();
 
 
 // $route = isset($_GET["route"]) ? split_url($_GET["route"])[0] : "home";
-$route = isset($_GET["route"]) ? $_GET["route"] : "home";
-// $db->mysql_error("ROUTE", $route);
+// $route = isset($_GET["route"]) ? $_GET["route"] : "home";
+
+$route = split_url($url)[0] != "" ? split_url($url)[0] : "home" ;
+
 $routes = [
     "home" => "controllers" . DS . "homecontroller.php", // ima kontroller
     "profile" => "controllers" . DS . "profilecontroller.php", // ima kontroller
-    // "admin" => array(
-    //     "test" => "test.php",
-    //     "ucionice" => "ucionice.php",
-    // ),
-    // "admin" => "admin.php",
     "admin" => "controllers" . DS . "admincontroller.php", // ima kontroller
     "admin/ucionice" => "ucionice.php",
-    "ucionice" => "ucionice.php",
     "login" => "controllers" . DS . "logincontroller.php", // ima kontroller
     "register" => "controllers" . DS . "registercontroller.php", // ima kontroller
     "logout" => "views/logout.php",
@@ -33,41 +41,19 @@ $routes = [
 
 
 
-// // print_r($_GET['route'] . "<br>");
-// $url = split_url($route);
-// print_r($url);
-// // exit;
-// function return_route($prev, $routes, $url)
-// {
-//     foreach ($url as $part) {
-//         if (array_key_exists($part, $routes)) {
-//             if (is_array($routes[$part]) && count($url) == 1) {
-//                 return $part . ".php";
-//             } else if (is_array($routes[$part])) {
-//                 $prev = array_shift($url);
-//                 return return_route($prev, $routes[$part], $url);
-//             } else {
-//                 return $routes[$part];
-//             }
-//         } else {
-//             return "404.php";
-//         }
-//     }
-// }
-
-// if (isset($_COOKIE["sessionid"]) || $route == "login" || $route == "register") { // TODO provjeriti ako je cookie ispravan
-//     require_once return_route($url[0], $routes, $url);
-// } else {
-//     require_once "login.php";
-// }
-
 // if (isset($_COOKIE["sessionid"]) || $route == "login" || $route == "register") { // TODO provjeriti ako je cookie ispravan
 if (isset($_COOKIE["sessionid"])) { // TODO provjeriti ako je cookie ispravan
-
-    if (array_key_exists($route, $routes)) {
-        require_once $routes[$route];
+    $valid_cookie = $db->select_one("SELECT * FROM session_cookies WHERE token = ?", array($_COOKIE["sessionid"]));
+    echo $valid_cookie['row_count'] . " ";
+    if ($valid_cookie['row_count'] == 1) {
+        echo "JEDAN" . " ";
+        if (array_key_exists($route, $routes)) {
+            require_once $routes[$route];
+        } else {
+            require_once "views/404.php"; // TODO response code
+        }
     } else {
-        require_once "views/404.php";
+        require_once "controllers/logincontroller.php";
     }
 } else {
     require_once "controllers/logincontroller.php";

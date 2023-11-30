@@ -15,24 +15,31 @@
 # </IfModule>
 
 
-<IfModule mod_rewrite.c>
-RewriteEngine On
+# <IfModule mod_rewrite.c>
+# RewriteEngine On
  
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
+# RewriteCond %{REQUEST_FILENAME} !-f
+# RewriteCond %{REQUEST_FILENAME} !-d
  
-# Rewrite all other URLs to index.php/URL
-RewriteRule ^(.*)$ index.php?route=$1 [PT,L]
-</IfModule>
+# # Rewrite all other URLs to index.php/URL
+# RewriteRule ^(.*)$ index.php?route=$1 [PT,L]
+# </IfModule>
 
 
 
 # sa CHATgpta
 
-# <IfModule mod_rewrite.c>
-#     RewriteEngine On
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /inventura2/
 
-#     # Redirect all requests to index.php
-#     # RewriteRule ^ index.php [L]
-#     RewriteRule ^(.*)$ index.php?route=$1 [L]
-# </IfModule>
+    # RewriteCond %{REQUEST_URI} ^/barcodes [NC]
+    # RewriteRule ^ - [L]
+
+    # Redirect all requests to index.php
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+
+
+

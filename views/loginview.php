@@ -62,8 +62,9 @@
 <body data-bs-theme="dark" style="height: 100vh;" class="d-flex justify-content-center align-items-center">
 
     <div id="<?php echo ($loginErr) ? 'shakeDiv' : ''; ?>" class="container border rounded py-3 my-5 col-lg-4">
-        <form method="POST" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
-
+        <!-- <form method="POST" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>"> -->
+        <form method="POST" action="login">
+            <?php echo $_SERVER['PHP_SELF']; ?>
             <?php if ($loginErr) : ?>
                 <p class="text-danger mb-3"><?php echo $loginErr; ?></p>
             <?php elseif ($loginSuccess) : ?>

@@ -18,7 +18,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#">Home</a>
+                    <a class="nav-link active" href="home">Home</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active" href="profile">Profil</a>
@@ -34,7 +34,9 @@
             </ul>
 
             <div class="parent-container">
-                <img src="barcodes/code_165197697230.png" alt="barcode alt">
+                <!-- <?php echo $_SERVER["PHP_SELF"]; ?><br>
+                <?php echo __FILE__; ?> -->
+                <img src="/inventura2/barcodes/code_165197697230.png" alt="barcode alt">
             </div>
             <?php if (isset($_COOKIE["sessionid"])) : ?>
                 <a class="btn btn-danger" href="logout">Odjava</a>

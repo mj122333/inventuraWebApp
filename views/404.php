@@ -81,6 +81,9 @@
     }
 </style>
 
+<?php 
+ echo $route. "<br>";
+ ?>
 <body data-bs-theme="dark" class="d-flex justify-content-center align-items-center">
     <div class="container w-auto d-flex flex-column align-items-center">
         <div class="alert alert-danger m-0">
