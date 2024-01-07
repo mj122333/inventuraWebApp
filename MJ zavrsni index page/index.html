@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="logotsck">
+        <a href="https://tsck.eu/inventura/bf">
+            <img src="https://tsck.hr/wp-content/uploads/2021/11/TSCk-logo.png" alt="tsclogo">
+        </a>
+    </div>
+    <table>
+        <tr data-url="https://tsck.eu/inventura">
+            <div class="veliki">
+                <td>
+                    <div>
+                        <img class="slike" src="https://jambrosic.xyz/inventura/favicon/apple-touch-icon.png"
+                            alt="slika">
+                    </div>
+                </td>
+                <td>
+                    <div>
+                        <span>Inventura</span>
+                    </div>
+                </td>
+                <td>
+                    <div>
+                        <p class="imena">Vito List 4.RT</p>
+                    </div>
+                </td>
+                <td>
+                    <div>
+                        <p class="godina">2023./2024.</p>
+                    </div>
+                </td>
+            </div>
+            </a>
+        </tr>
+
+        <tr data-url="https://tsck.eu/kurikul">
+            <div class="veliki">
+                <td>
+                    <div>
+                        <img class="slike" src="vinkologo.png" alt="slika">
+                    </div>
+                </td>
+                <td>
+                    <div>
+                        <span>Školski kurikulum</span>
+                    </div>
+                </td>
+                <td>
+                    <div>
+                        <p class="imena">Vinko Bel 4.RT</p>
+                    </div>
+                </td>
+                <td>
+                    <div>
+                        <p class="godina">2023./2024.</p>
+                    </div>
+                </td>
+            </div>
+        </tr>
+
+        <tr data-url="https://tsck.eu/labinfo">
+            <div class="veliki">
+                <td>
+                    <div>
+                        <img class="slike"
+                            src="https://yt3.googleusercontent.com/vxJN_qLlac4H50aDGtc6RD8slHLwf5MxyORiUmH26TgXaXubOCEybTxJXzsasS6deeyX1gXlcA=s900-c-k-c0x00ffffff-no-rj"
+                            alt="slika">
+                    </div>
+                </td>
+                <td>
+                    <div>
+                        <span>Lab info</span>
+                    </div>
+                </td>
+                <td>
+                    <div>
+                        <p class="imena">Florijan Gotal 4.RT</p>
+                    </div>
+                </td>
+                <td>
+                    <div>
+                        <p class="godina">2023./2024.</p>
+                    </div>
+                </td>
+            </div>
+        </tr>
+
+        <tr data-url="https://tsck.eu/tracker">
+            <div class="veliki">
+                <td>
+                    <div>
+                        <img class="slike"
+                            src="https://www.advertisepurple.com/wp-content/uploads/2020/07/Screen_Shot_2018-08-01_at_11.14.32.png"
+                            alt="slika">
+                    </div>
+
+                </td>
+                <td>
+                    <div>
+                        <span>DDB Track</span>
+                    </div>
+                </td>
+                <td>
+                    <div>
+                        <p class="imena">David Blažeka 4.RT</p>
+                    </div>
+                </td>
+                <td>
+                    <div>
+                        <p class="godina">2023./2024.</p>
+                    </div>
+                </td>
+            </div>
+        </tr>
+
+        <tr data-url="https://tsck.eu/tracker">
+            <div class="veliki">
+                <td>
+                    <div>
+                        <img class="slike"
+                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Tic_tac_toe.svg/800px-Tic_tac_toe.svg.png"
+                            alt="slika">
+                    </div>
+
+                </td>
+                <td>
+                    <div>
+                        <span>TIC TAC TOE</span>
+                    </div>
+                </td>
+                <td>
+                    <div>
+                        <p class="imena">Noel Špoljarić 4.RT</p>
+                    </div>
+                </td>
+                <td>
+                    <div>
+                        <p class="godina">2023./2024.</p>
+                    </div>
+                </td>
+            </div>
+            </a>
+        </tr>
+    </table>
+</body>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var rows = document.querySelectorAll('tr');
+
+        rows.forEach(function (row) {
+            row.addEventListener('click', function () {
+                var url = row.getAttribute('data-url');
+                if (url) {
+                    window.location.href = url;
+                }
+            });
+        });
+    });
+</script>
+
+</html>

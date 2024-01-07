@@ -1,15 +1,15 @@
-function deleteItems() {
-
-    function getCookie(name) {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.startsWith(name + '=')) {
-                return cookie.substring(name.length + 1);
-            }
+function getCookie(name) {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.startsWith(name + '=')) {
+            return cookie.substring(name.length + 1);
         }
-        return null;
     }
+    return null;
+}
+
+function deleteItems() {
 
 
     var form = document.getElementById('form');
@@ -44,9 +44,6 @@ function deleteItems() {
             location.reload();
 
             console.log(data)
-
-            const messageOutput = document.getElementById("serverResponse");
-            messageOutput.textContent = data.message;
         })
         .catch(error => {
             console.error('Error:', error);

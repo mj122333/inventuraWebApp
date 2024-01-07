@@ -1,4 +1,14 @@
-# RewriteEngine On
+RewriteEngine On
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+ 
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+ 
+# Rewrite all other URLs to index.php/URL
+RewriteRule ^(.*)$ index.php?route=$1 [PT,L]
+</IfModule>
 
 # # Rewrite user-friendly URLs to users.php
 # RewriteRule ^broj_([a-zA-Z0-9_-]+)$ upload.php?value=$1 [L]
@@ -17,12 +27,12 @@
 # RewriteCond %{REQUEST_FILENAME} !-d
 # RewriteRule ^(.*)$ 404.html [L]
 
-<IfModule mod_rewrite.c>
-RewriteEngine On
+# <IfModule mod_rewrite.c>
+# RewriteEngine On
  
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
+# RewriteCond %{REQUEST_FILENAME} !-f
+# RewriteCond %{REQUEST_FILENAME} !-d
  
-# Rewrite all other URLs to index.php/URL
-RewriteRule ^(.*)$ index.php?route=$1 [PT,L]
-</IfModule>
+# # Rewrite all other URLs to index.php/URL
+# RewriteRule ^(.*)$ index.php?route=$1 [PT,L]
+# </IfModule>

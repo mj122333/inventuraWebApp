@@ -1,0 +1,65 @@
+.logotsck {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+/* a {
+    text-decoration: none;
+    color: #dcd0ff;
+    font-family: 'Roboto', sans-serif;
+} */
+
+span {
+    font-family: 'Roboto', sans-serif;
+}
+
+.slike {
+    width: 70px;
+    height: 70px;
+    border-radius: 20%;
+    margin: 10px 0;
+}
+
+.veliki {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: large;
+}
+
+p {
+    font-family: 'Roboto', sans-serif;
+}
+
+table tr:nth-child(odd) span {
+    color: #BBD5EA;
+}
+
+table tr:nth-child(even) span {
+    color: #ABD18E;
+}
+
+td {
+    text-align: center;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+table {
+    margin: 0 10%;
+    border-collapse: collapse;
+}
+
+tr {
+    border-bottom: lightgray solid 0.5px;
+}
+
+tr:hover {
+    background: #ebebeb;
+    cursor: pointer;
+}

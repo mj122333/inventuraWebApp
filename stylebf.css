@@ -1,0 +1,28 @@
+.logotsck {
+    display: flex;
+    justify-content: center;
+}
+
+.logotsck img {
+    width: 200px;
+}
+
+.izrada {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-family: 'Roboto', sans-serif;
+    font-size: 40px;
+}
+
+.bifslika {
+    width: 35vw;
+}
+
+a {
+
+    background: -webkit-linear-gradient(45deg, #565254ff, #ABD18E, #BBD5EA);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}

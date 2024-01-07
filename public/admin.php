@@ -2,6 +2,7 @@
 
 if (!isset($_SESSION["role"]) || $_SESSION["role"] !== "admin") {
     header('HTTP/1.1 403 Forbidden');
+    http_response_code(404);
     exit;
 }
 
@@ -66,7 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
         <main class="d-flex flex-row h-100">
 
-            <?php include 'admin_sidebar.php'; ?>
+            <?php include 'sidebar.php'; ?>
 
             <div class="container-fluid row p-5 mx-0 h-100">
                 <!-- <div class="border h-50 overflow-auto"> -->
@@ -116,7 +117,6 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
                     <button class="btn btn-success fw-bold" type="submit" onclick="deleteItems()">IZBRIŠI ODABRANO</button>
                     <button class="btn btn-primary fw-bold" id="oznaci">OZNAČI SVE</button>
                     <button class="btn btn-outline-primary fw-bold" id="makni">MAKNI SVE</button>
-                    <p id="serverResponse"></p>
                 </form>
 
             </div>

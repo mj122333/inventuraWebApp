@@ -12,9 +12,7 @@ if (isset($_COOKIE["sessionid"])) {
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <?php require_once "views/head_links.php"; ?>
     <title>Registracija</title>
 
     <style>
@@ -60,10 +58,10 @@ if (isset($_COOKIE["sessionid"])) {
             var show = document.getElementById("show-pass");
             if (password.type === "password") {
                 password.type = "text";
-                show.innerHTML = "Hide";
+                show.innerHTML = "Sakrij";
             } else {
                 password.type = "password";
-                show.innerHTML = "Show";
+                show.innerHTML = "Prikaži";
             }
         }
     </script>
@@ -72,7 +70,7 @@ if (isset($_COOKIE["sessionid"])) {
 <body data-bs-theme="dark" style="height: 100vh;" class="d-flex justify-content-center align-items-center">
 
     <div id="<?php echo ($emailErr) ? 'shakeDiv' : ''; ?>" class="container border rounded py-3 my-5 col-lg-4">
-        <form class="needs-validation" novalidate method="POST" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
+        <form class="needs-validation" novalidate method="POST" action="register">
 
             <?php if ($loginErr) : ?>
                 <p class="text-danger mb-3"><?php echo $loginErr; ?></p>
@@ -82,28 +80,28 @@ if (isset($_COOKIE["sessionid"])) {
 
             <div class="input-group mb-3">
                 <span class="input-group-text">ime</span>
-                <input required type="text" class="form-control" name="ime" value="<?php echo $ime; ?>" placeholder="ime">
+                <input type="text" class="form-control" name="ime" value="<?php echo $ime; ?>" placeholder="ime" required>
             </div>
 
             <div class="input-group mb-3">
                 <span class="input-group-text">prezime</span>
-                <input required type="text" class="form-control" name="prezime" value="<?php echo $prezime; ?>" placeholder="prezime">
+                <input type="text" class="form-control" name="prezime" value="<?php echo $prezime; ?>" placeholder="prezime" required>
             </div>
 
             <div class="input-group mb-3">
                 <span class="input-group-text">e-mail</span>
-                <input required type="text" class="form-control <?php echo ($emailErr) ? 'is-invalid' : ''; ?>" name="email" value="<?php echo $email; ?>" placeholder="e-mail">
+                <input type="text" class="form-control <?php echo ($emailErr) ? 'is-invalid' : ''; ?>" name="email" value="<?php echo $email; ?>" placeholder="e-mail" required>
             </div>
 
             <div class="input-group mb-3">
                 <span class="input-group-text">username</span>
-                <input required type="text" class="form-control <?php echo ($nameErr) ? 'is-invalid' : ''; ?>" name="username" value="<?php echo $username; ?>" placeholder="username">
+                <input type="text" class="form-control <?php echo ($nameErr) ? 'is-invalid' : ''; ?>" name="username" value="<?php echo $username; ?>" placeholder="username" required>
             </div>
 
             <div class="input-group mb-3">
                 <span class="input-group-text">password</span>
-                <input required type="password" class="form-control" id="password" name="password" placeholder="password">
-                <button class="btn btn-success" id="show-pass" onclick="showPassword()" type="button">Show</button>
+                <input type="password" class="form-control" id="password" name="password" placeholder="password" required>
+                <button class="btn btn-success" id="show-pass" onclick="showPassword()" type="button">Prikaži</button>
             </div>
 
             <div class="form-check form-switch">
@@ -123,7 +121,7 @@ if (isset($_COOKIE["sessionid"])) {
         </form>
 
         <small>Imate račun?</small>
-        <a href="login" class="link-secondary link-underline-secondary link-underline-opacity-0 link-underline-opacity-75-hover"><small>Prijavite se!</small></a>
+        <a href="<?php echo DS . APPFOLDER . DS ?>login" class="link-secondary link-underline-secondary link-underline-opacity-0 link-underline-opacity-75-hover"><small>Prijavite se!</small></a>
     </div>
 
     <script>

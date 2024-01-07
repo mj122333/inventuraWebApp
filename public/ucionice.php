@@ -1,34 +1,3 @@
-<?php
-
-if (!isset($_SESSION["role"]) || $_SESSION["role"] !== "admin") {
-    header('HTTP/1.1 403 Forbidden');
-    exit;
-}
-
-$kod = "";
-if ($_SERVER["REQUEST_METHOD"] == "GET") {
-
-    if (isset($_GET["invite"])) {
-        $kod = bin2hex(random_bytes(4));
-    }
-
-    $userID = $_SESSION["id"];
-    $sql = "SELECT * FROM invite_codes WHERE user_id = ?";
-    $result = $db->select($sql, array($userID));
-
-    if ($result["row_count"] === 1) {
-        $sql = "UPDATE invite_codes SET kod = ? WHERE user_id = ?";
-        $db->update($sql, array($kod, $userID));
-    } else {
-        $sql = "INSERT INTO invite_codes (kod, user_id) VALUES (?, ?)";
-        $db->insert($sql, array($kod, $userID));
-    }
-}
-
-// $sql = "SELECT users.username FROM pozvani, users WHERE users.id = user_id AND admin_id = ?";
-// $result = $db->select($sql, array($_SESSION["id"])); // TODO ????
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -66,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
         <main class="d-flex flex-row h-100">
 
-            <?php include 'admin_sidebar.php'; ?>
+            <?php include 'sidebar.php'; ?>
 
             <div class="container-fluid row p-5 mx-0 h-100">
                 <!-- <div class="border h-50 overflow-auto"> -->
@@ -110,7 +79,6 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
                     <button class="btn btn-success fw-bold" type="submit" onclick="deleteItems()">IZBRIŠI ODABRANO</button>
                     <button class="btn btn-primary fw-bold" id="oznaci">OZNAČI SVE</button>
                     <button class="btn btn-outline-primary fw-bold" id="makni">MAKNI SVE</button>
-                    <p id="serverResponse"></p>
                 </form>
 
             </div>

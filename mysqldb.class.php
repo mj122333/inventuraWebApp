@@ -43,7 +43,7 @@ class MySQLDB
         //     $conn = new mysqli($this->host, $this->username, $this->password, $this->database);
         //     $this->db = $conn;
         // } catch (mysqli_sql_exception $e) {
-        //     $this->mysql_error("CONNECT", $e->getMessage()); // TODO cant report error wihtout connection
+        //     $this->mysql_error("CONNECT", $e->getMessage()); // TODO nebre logati ako ne uspe konekcija
         // }
     }
 
@@ -57,7 +57,7 @@ class MySQLDB
             $stmt->execute($params);
             $result['row_count'] = $stmt->rowCount();
             $i = 0;
-            while ($row = $stmt->fetch()) {
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $result['result'][$i] = $row;
                 $i++;
             }
@@ -77,7 +77,7 @@ class MySQLDB
             $stmt->execute($params);
 
             $result['row_count'] = $stmt->rowCount();
-            $result['result'] = $stmt->fetch();
+            $result['result'] = $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (mysqli_sql_exception $e) {
             $this->mysql_error("SELECT ONE", $e->getMessage());
         }
@@ -93,7 +93,7 @@ class MySQLDB
             $stmt->execute($params);
         } catch (mysqli_sql_exception $e) {
             $this->mysql_error("DELETE", $e->getMessage());
-        }
+        } // TODO dodati delete success i id
     }
 
     function insert($query, $params = array())
@@ -102,9 +102,13 @@ class MySQLDB
         try {
             $stmt = $db->prepare($query);
             $stmt->execute($params);
+            $insert_id = $db->lastInsertId();
         } catch (mysqli_sql_exception $e) {
             $this->mysql_error("INSERT", $e->getMessage());
+            return array('success' => false, 'insert_id' => -1);
         }
+
+        return array('success' => true, 'insert_id' => $insert_id);
     }
 
     function update($query, $params = array())
@@ -121,7 +125,7 @@ class MySQLDB
     function mysql_error($query, $msg)
     {
         $db = $this->get_db();
-        $stmt = $db->prepare("INSERT INTO mysql_errors (query, message) VALUES (?, ?)");
+        $stmt = $db->prepare("INSERT INTO vl_mysql_errors (query, message) VALUES (?, ?)");
         $stmt->execute(array($query, $msg));
     }
 }

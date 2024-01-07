@@ -22,7 +22,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['role'])) {
 
 
 
-echo basename(__FILE__, '.php');
+// echo basename(__FILE__, '.php');
 
 
 require_once "views/homeview.php";

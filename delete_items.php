@@ -17,7 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             foreach ($data as $id) {
                 $deletedItems[] = $id;
 
-                $db->delete("DELETE FROM evidencija WHERE id=?", array($id));
+                // $db->delete("DELETE FROM evidencija WHERE id=?", array($id));
+                $db->update("UPDATE vl_evidencija set aktivno=0 WHERE id=?", array($id));
             }
 
             // vraca ID-je koji su izbrisani
