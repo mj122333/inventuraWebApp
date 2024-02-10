@@ -66,10 +66,6 @@ cursor = db.cursor()
 #         sql = f"INSERT INTO proizvodi (tip, naziv, opis) VALUES ('{tip_id}', '{brend} {tip}', 'NEMA')"
 #         cursor.execute(sql)
 
-
-# BARKODOVI
-
-
 db.commit()
 
 cursor.close()

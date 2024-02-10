@@ -36,18 +36,11 @@ class MySQLDB
 
             $this->db = new PDO($dsn, $this->username, $this->password, $options);
         } catch (PDOException $e) {
-            $this->mysql_error("CONNECT", $e->getMessage());
+            $this->mysql_error("CONNECT", $e->getMessage()); // TODO nebre logati ako ne uspe konekcija
         }
-
-        // try {
-        //     $conn = new mysqli($this->host, $this->username, $this->password, $this->database);
-        //     $this->db = $conn;
-        // } catch (mysqli_sql_exception $e) {
-        //     $this->mysql_error("CONNECT", $e->getMessage()); // TODO nebre logati ako ne uspe konekcija
-        // }
     }
 
-    function select($query, $params = array())
+    function select($query, $params = array(), $key = "")
     {
 
         $db = $this->get_db();
@@ -58,8 +51,12 @@ class MySQLDB
             $result['row_count'] = $stmt->rowCount();
             $i = 0;
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $result['result'][$i] = $row;
-                $i++;
+                if ($key !== "") {
+                    $result['result'][$row[$key]] = $row;
+                } else {
+                    $result['result'][$i] = $row;
+                    $i++;
+                }
             }
         } catch (mysqli_sql_exception $e) {
             $this->mysql_error("SELECT", $e->getMessage());

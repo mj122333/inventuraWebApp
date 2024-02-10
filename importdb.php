@@ -32,7 +32,7 @@ use Picqer\Barcode\BarcodeGeneratorSVG;
 
 $barcodes_folder = 'barcodes/';
 
-function generate_barcodes()
+function generate_barcodes_proizvodi()
 {
     global $db, $barcodes_folder;
 
@@ -46,6 +46,7 @@ function generate_barcodes()
     }
 
     print_r(count($barkodovi));
+    echo "<br>";
 
     $sql = "SELECT * FROM vl_proizvodi";
     $result = $db->select($sql)["result"];
@@ -75,12 +76,57 @@ function generate_barcodes()
     return $counter;
 }
 
+function generate_barcodes_ucionice()
+{
+    global $db, $barcodes_folder;
+
+    $sql = "SELECT * from vl_ucionice";
+    $result = $db->select($sql);
+    $barkodovi = array();
+    if ($result["row_count"] != 0) {
+        foreach ($result["result"] as $row) {
+            $barkodovi[] = $row["barkod"];
+        }
+    }
+
+    print_r(count($barkodovi));
+    echo "<br>";
+
+    $sql = "SELECT * FROM vl_ucionice";
+    $result = $db->select($sql)["result"];
+    $counter = 0;
+
+    foreach ($result as $row) {
+        $ID = $row['id'];
+
+        $barcodeData = "200000" . str_pad($ID, 6, '0', STR_PAD_LEFT);
+        $barcodeData .= calculateEAN13CheckDigit($barcodeData);
+        $barcode_file_path = $barcodes_folder . "code_{$barcodeData}.svg";
+
+        if (!file_exists($barcode_file_path)) {
+            $generator = new BarcodeGeneratorSVG();
+            $barcodeImage = $generator->getBarcode($barcodeData, $generator::TYPE_EAN_13);
+            file_put_contents($barcode_file_path, $barcodeImage);
+            $counter++;
+        }
+
+        if (!in_array($barcodeData, $barkodovi)) {
+            $sql = "UPDATE vl_ucionice SET barkod=? WHERE id=?";
+            $db->insert($sql, array($barcodeData, $ID));
+        }
+    }
+
+    return $counter;
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
     if (isset($_GET["action"])) {
         if ($_GET["action"] == "generate_barcodes") {
-            $c = generate_barcodes();
-            echo "<br><b>BARKODOVI GENERIRANI: " . $c . "</b><br>";
+            $c1 = generate_barcodes_proizvodi();
+            $c2 = generate_barcodes_ucionice();
+            echo "<br><b>BARKODOVI GENERIRANI (PROIZVODI): " . $c1 . "</b><br>";
+            echo "<br><b>BARKODOVI GENERIRANI (UČIONICE): " . $c2 . "</b><br>";
         }
     }
 
@@ -198,7 +244,7 @@ function get_rows($conn, $table)
 function show_barcodes()
 {
     global $db;
-    $result = $db->select("SELECT barkod, vl_proizvodi.naziv FROM vl_barkodovi, vl_proizvodi WHERE vl_barkodovi.proizvod_id=vl_proizvodi.id;");
+    $result = $db->select("SELECT barkod, vl_proizvodi.naziv, vl_proizvodi.id as proizvod_id FROM vl_barkodovi, vl_proizvodi WHERE vl_barkodovi.proizvod_id=vl_proizvodi.id;");
 
     echo "<p>Barkodova: " . $result["row_count"] . "</p>";
 
@@ -212,7 +258,32 @@ function show_barcodes()
 
         $barkod = $row["barkod"];
         echo "<div class='barcode-item'>";
-        echo "<p>" . $row["naziv"] . "</p>";
+        echo "<p>" . $row["naziv"] . " (ID: " . $row["proizvod_id"] . ")</p>";
+        echo "<img src='barcodes/code_$barkod.svg' alt='Barcode for $barkod'><br>";
+        echo "<p>" . $barkod . "</p>";
+        echo "</div>";
+
+        $counter++;
+    }
+
+    echo "</div>";
+
+
+    $result = $db->select("SELECT * from vl_ucionice");
+
+    echo "<p>Barkodova: " . $result["row_count"] . "</p>";
+
+    $counter = 0;
+    echo "<div style='border-bottom: solid 1px black;' class='barcode-container'>";
+
+    foreach ($result["result"] as $row) {
+        if ($counter % 3 == 0 && $counter > 0) {
+            echo "</div><div style='border-bottom: solid 1px black;' class='barcode-container'>";
+        }
+
+        $barkod = $row["barkod"];
+        echo "<div class='barcode-item'>";
+        echo "<p>" . $row["oznaka"] . "</p>";
         echo "<img src='barcodes/code_$barkod.svg' alt='Barcode for $barkod'><br>";
         echo "<p>" . $barkod . "</p>";
         echo "</div>";

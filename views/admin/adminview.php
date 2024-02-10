@@ -90,9 +90,9 @@
                         <i class="ikona bi bi-arrow-left-right"></i>
                     </a>
 
-                    <a href="<?php echo DS . APPFOLDER . DS ?>scan" class="link-secondary link-underline-opacity-0 container ikona-parent shadow border h-100 py-3 col-3">
-                        <p class="d-none d-lg-block">SKEN</p>
-                        <i class="ikona bi bi-upc-scan"></i>
+                    <a href="<?php echo DS . APPFOLDER . DS ?>admin/stanje" class="link-secondary link-underline-opacity-0 container ikona-parent shadow border h-100 py-3 col-3">
+                        <p class="d-none d-lg-block">STANJE</p>
+                        <i class="ikona bi bi-database-check"></i>
                     </a>
                 </div>
 

@@ -16,7 +16,8 @@ sql = "SELECT * FROM vl_inventura ORDER BY id DESC LIMIT 1"
 cursor.execute(sql)
 result = cursor.fetchall()
 column_names = cursor.column_names
-zadnja_inventura = result[0][column_names.index("id")]
+# zadnja_inventura = result[0][column_names.index("id")]
+zadnja_inventura = 31
 
 print(f"Zadnja inventura ID: {zadnja_inventura}", flush=True)
 
@@ -48,7 +49,10 @@ for i in range(150):
         zadnja_inventura,
     )
 
-    cursor.execute(sql, values)
+    try:
+        cursor.execute(sql, values)
+    except:
+        pass
 
 
 db.commit()

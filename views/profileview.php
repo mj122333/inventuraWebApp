@@ -36,9 +36,9 @@
             <div class="container border py-3 col-lg-6 col-12 my-5">
 
 
-                <!-- <?php foreach ($_SESSION as $key => $value) {
-                            echo "$key: $value<br>";
-                        } ?> -->
+                <?php if ($error_message != "") : ?>
+                    <p class="text-danger"><?= $error_message; ?></p>
+                <?php endif; ?>
 
                 <form method="POST" action="profile">
 
@@ -74,7 +74,7 @@
 
                     <button class="btn btn-success w-100" name="update_user" value="update_user" type="submit">Ažuriraj podatke</button>
                 </form>
-                <button id="update-button">update</button>
+                <!-- <button id="update-button">update</button> -->
             </div>
         </main>
 

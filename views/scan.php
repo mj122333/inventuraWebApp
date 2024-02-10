@@ -23,7 +23,7 @@
             <div class="container-fluid row p-2 mx-0 h-100">
 
 
-                <section class="container" id="demo-content">
+                <section id="skenSection" class="container" id="demo-content">
 
                     <div>
                         <a class="btn btn-success col-5 col-sm-3 col-md-2" id="startButton">Start</a>
@@ -43,10 +43,58 @@
                     </div>
 
                     <div class="input-group mb-3 col-12 col-sm-4">
-                        <span class="input-group-text">Rezultat</span>
+                        <span class="input-group-text">Vrijednost</span>
                         <span id="result" class="input-group-text font-monospace"></span>
                         <span class="input-group-text"><i class="bi bi-upc-scan"></i></span>
                     </div>
+
+                    <div class="input-group mb-3 col-12 col-sm-4">
+                        <span class="input-group-text">Učionica</span>
+                        <span id="ucionica" class="input-group-text font-monospace"></span>
+                        <span class="input-group-text"><i class="bi bi-book"></i></span>
+                    </div>
+
+                    <div class="input-group mb-3 col-12 col-sm-4">
+                        <span class="input-group-text">Poruka</span>
+                        <span id="response" class="input-group-text font-monospace"></span>
+                        <span class="input-group-text"><i class="bi bi-code-slash"></i></span>
+                    </div>
+
+                    <button onclick="zamjenaUnosa()" class="btn btn-primary">Unesi ručno</button>
+
+                </section>
+
+                <section id="rucnoSection" class="col-12 col-md-6 col-lg-4 mx-0" style="display: none;">
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Vrijednost</span>
+                        <input type="text" id="vrijednost" class="form-control font-monospace"></input>
+                        <span class="input-group-text"><i class="bi bi-upc-scan"></i></span>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Učionica</span>
+                        <!-- <input type="text" id="ucionicaRucno" class="form-control font-monospace"></input> -->
+                        <select id="ucionicaSelect" class="form-select">
+                            <option value>Odaberi učionicu</option>
+                            <?php
+                            $ucionice = $result = $db->select("SELECT * FROM vl_ucionice");
+                            foreach ($ucionice["result"] as $row) {
+                            ?>
+                                <option value="<?= $row["id"] ?>"><?= $row["oznaka"] ?></option>
+                            <?php } ?>
+                        </select>
+                        <span class="input-group-text"><i class="bi bi-book"></i></span>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Poruka</span>
+                        <span id="responseRucno" class="input-group-text font-monospace"></span>
+                        <span class="input-group-text"><i class="bi bi-code-slash"></i></span>
+                    </div>
+
+                    <button onclick="posaljiPodatke()" class="col-5 col-sm-3 btn btn-success">Pošalji</button>
+                    <button onclick="zamjenaUnosa()" class="col-5 col-sm-3 btn btn-primary">Skeniraj</button>
 
                 </section>
 
@@ -58,9 +106,58 @@
 
     <script type="text/javascript" src="https://unpkg.com/@zxing/library@latest/umd/index.min.js"></script>
     <script type="text/javascript">
+        function zamjenaUnosa() {
+            $('#skenSection').toggle();
+            $('#rucnoSection').toggle();
+            // sken = !sken;
+        }
+
+        function posaljiPodatke() {
+            let vrijednost = $('#vrijednost').val();
+            let ucionica_id = $('#ucionicaSelect').val();
+            const params = {
+                value: vrijednost,
+                standard: "EAN_13",
+                ucionica: ucionica_id,
+                user: <?php echo $_SESSION["id"]; ?>,
+            };
+
+            console.log("Params:", params);
+            console.log("ucionica_id", ucionica_id);
+
+            const formData = new FormData();
+            for (const key in params) {
+                formData.append(key, params[key]);
+            }
+
+            fetch('upload', {
+                    method: 'POST',
+                    body: formData,
+                    // Headers can be modified as needed, for example, to specify JSON
+                    // headers: {
+                    //   'Content-Type': 'application/json',
+                    // },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Response:', data)
+                    $('#responseRucno').text(data["message"]);
+                    $('#responseRucno').removeClass("text-success");
+                    $('#responseRucno').removeClass("text-danger");
+                    $('#responseRucno').addClass(data["status"] == "success" ? "text-success" : "text-danger");
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
         window.addEventListener('load', function() {
+
+            // let sken = true;
+
+            let barcodeFormats = ZXing.BarcodeFormat;
+            let ucionica_id = null;
+
             let selectedDeviceId;
-            const codeReader = new ZXing.BrowserMultiFormatReader();
+            const codeReader = new ZXing.BrowserMultiFormatReader(); // TODO kod ispod pretvoriti u jquery
             console.log('ZXing code reader initialized');
             codeReader.listVideoInputDevices()
                 .then((videoInputDevices) => {
@@ -85,15 +182,19 @@
                     document.getElementById('startButton').addEventListener('click', () => {
                         codeReader.decodeFromVideoDevice(selectedDeviceId, 'video', (result, err) => {
                             if (result) {
-                                console.log(result);
+                                // console.log(result);
 
-                                document.getElementById('result').textContent = result.text;
                                 if (result.text != document.getElementById('result').textContent) {
+                                    document.getElementById('result').textContent = result.text;
                                     // slanje post zahtjeva na server
                                     const params = {
                                         value: result.text,
-                                        standard: 'EAN13', // TODO staviti standard iz skenera
+                                        standard: barcodeFormats[result.format],
+                                        ucionica: ucionica_id,
+                                        user: <?php echo $_SESSION["id"]; ?>,
                                     };
+
+                                    console.log(params);
 
                                     const formData = new FormData();
                                     for (const key in params) {
@@ -109,7 +210,19 @@
                                             // },
                                         })
                                         .then(response => response.json())
-                                        .then(data => console.log('Success:', data))
+                                        .then(data => {
+                                            console.log('Response:', data)
+                                            $('#response').text(data["message"]);
+                                            $('#response').removeClass("text-success");
+                                            $('#response').removeClass("text-danger");
+                                            $('#response').addClass(data["status"] == "success" ? "text-success" : "text-danger");
+
+                                            if (data["vrsta"] == "ucionica") {
+                                                $('#ucionica').text(data["oznaka"]);
+                                                ucionica_id = data["ucionica_id"];
+                                            }
+                                            console.log("ucionica_id var: ", ucionica_id);
+                                        })
                                         .catch(error => console.error('Error:', error));
                                 }
 

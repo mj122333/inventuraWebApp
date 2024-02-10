@@ -23,7 +23,7 @@ function deleteItems() {
         // console.log(checkbox.value);
     });
 
-    jsonArray = JSON.stringify(ids);
+    // jsonArray = JSON.stringify(ids);
     // console.log(jsonArray)
 
     const sessionCookie = getCookie("sessionid");
@@ -34,10 +34,13 @@ function deleteItems() {
             'Content-Type': 'application/json',
             'Cookie': 'sessionid=' + sessionCookie,
         },
-        body: jsonArray
+        body: JSON.stringify({
+            "ids": ids,
+            "action": "delete_evidencija" 
+        })
     };
 
-    var url = "delete_items";
+    var url = "js_upload";
     fetch(url, requestOptions)
         .then(response => response.text())
         .then(data => {

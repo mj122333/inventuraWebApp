@@ -21,11 +21,11 @@ $routes = [
     "register" => "controllers" . DS . "registercontroller.php", // ima kontroller
     "scan" => "views" . DS . "scan.php", // TODO controller ?
     "logout" => "views/logout.php",
-    "delete_items" => "delete_items.php",
+    "js_upload" => "js_upload.php",
     "404" => "views/404.php",
     "403" => "views/403.php",
 
-    "admin/delete_items" => "delete_items.php", // TODO da ruta ima i druge vrijednosti
+    "admin/js_upload" => "js_upload.php",
 
     "importdb" => "importdb.php",
     "upload" => "upload.php",

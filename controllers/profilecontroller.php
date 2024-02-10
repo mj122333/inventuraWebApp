@@ -2,19 +2,29 @@
 
 
 // funkcija koja azurira podatke usera ovisno o post zahtjevu
-function updateUser() // TODO provjeriti ako ne postoji user s tim usernameom
+function updateUser()
 {
-    global $db;
+    global $db, $error_message;
 
     $ime = $_POST["ime"];
     $prezime = $_POST["prezime"];
     $username = $_POST["username"];
     $id = $_SESSION["id"];
 
-    $db->update("UPDATE vl_users SET ime=?, prezime=?, username=? WHERE id=?", array($ime, $prezime, $username, $id));
+    $result = $db->select("SELECT * FROM vl_users WHERE username=? AND id!=?", array($username, $id));
 
-    login_with_id($_SESSION["id"]);
+    if ($result["row_count"] == 0) {
+        $db->update("UPDATE vl_users SET ime=?, prezime=?, username=? WHERE id=?", array($ime, $prezime, $username, $id));
+
+        login_with_id($_SESSION["id"]);
+    }else
+    {
+        $error_message = "Već postoji korisnik s tim korisničkim imenom!";
+    }
 }
+
+// varijable za view
+$error_message = "";
 
 if (isset($_POST["update_user"])) {
     updateUser();

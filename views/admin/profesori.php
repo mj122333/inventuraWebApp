@@ -48,68 +48,7 @@
 
             <?php include 'views/sidebar.php'; ?>
 
-            <div class="container border py-3 w-50 my-5">
-
-                <!-- <div class="border h-50 overflow-auto"> -->
-                <!-- <form id="form" onsubmit="return false;">
-
-                    <div class="border table-wrapper-scroll-y custom-scrollbar">
-                        <table class="table table-dark table-hover">
-                            <?php
-                            $result = getProfesoriEvidencija();
-                            $profesori = array();
-
-                            if ($result["row_count"] > 0) {
-                            ?>
-                                <thead class="position-sticky" style="top: 0;">
-                                    <tr>
-                                        <th scope="col">Obriši</th>
-                                        <th>ID</th>
-                                        <th>proizvod</th>
-                                        <th>ucionica</th>
-                                        <th>datum</th>
-                                        <th>vrijeme</th>
-                                        <th>korisnik</th>
-                                        <th>barkod<button style="float: right; height: 100%; background-color: transparent; border: none;" id="refresh"><ion-icon name="refresh-outline"></ion-icon></button></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($result["result"] as $row) { ?>
-
-                                        <?php if (!in_array($row["username"], $profesori)) {
-                                            $profesori[] = $row["username"] ?>
-                                            <tr class="row-parent" data-row-parent="<?= $row["username"] ?>">
-                                                <td class="fw-bold bg-success" colspan="8"><?= strtoupper($row["username"]) ?></td>
-                                            </tr>
-                                        <?php } ?>
-
-                                        <tr style="display: none;" class="row-child" data-row-child="<?= $row["username"] ?>">
-                                            <th>
-                                                <input class="form-check-input checkEvidencija" type="checkbox" value="<?= $row["id"] ?>">
-                                            </th>
-                                            <th scope="row"><?= $row["id"] ?></th>
-                                            <td><?= $row["naziv"] ?></td>
-                                            <td><?= $row["ucionica"] ?></td>
-                                            <td><?= date_format(date_create($row["datum"]), "d.m.Y.") ?></td>
-                                            <td><?= $row["vrijeme"] ?></td>
-                                            <td><?= $row["username"] ?></td>
-                                            <td class="barcode open-modal" data-value="<?= $row["barkod"] ?>" data-image="<?php echo DS . APPFOLDER . DS ?>barcodes/code_<?php echo $row["barkod"] ?>.png"><img style="background-color: white;" class="img-thumbnail img-fluid" src="<?php echo DS . APPFOLDER . DS ?>barcodes/code_<?php echo $row["barkod"] ?>.png" alt="barcode alt"><?= $row["barkod"] ?></td>
-                                        </tr>
-
-                                <?php }
-                                } else {
-                                    echo "<th>Još nema zabilježenih evidencija</th>";
-                                }
-                                ?>
-                                </tbody>
-                        </table>
-                    </div>
-                    <?php if ($result["row_count"] > 0) { ?>
-                        <button class="btn btn-success fw-bold" type="submit" onclick="deleteItems()">IZBRIŠI ODABRANO</button>
-                        <button class="btn btn-primary fw-bold" id="oznaci">OZNAČI SVE</button>
-                        <button class="btn btn-outline-primary fw-bold" id="makni">MAKNI SVE</button>
-                    <?php } ?>
-                </form> -->
+            <div class="container border rounded py-3 col-11 col-md-6 my-5">
 
                 <ul class="list-group list-group-flush overflow-auto" style="max-height: 50vh;">
                     <?php
@@ -120,9 +59,7 @@
 
                             <li class="list-group-item">
                                 <a href="evidencija?p=<?= $row["id"] ?>&i=<?= $zadnja_inventura ?>" class="link-secondary link-underline-opacity-0 text-white"><?= $row["ime"] . " " . $row["prezime"] . " (" . $row["username"] . ")" ?></a>
-                                <!-- <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch">
-                                </div> -->
+                                <span class="float-end <?php echo $row["role"] == "admin" ? "text-danger" : "text-success" ?>"><?= $row["role"] ?></span>
                             </li>
 
                     <?php }

@@ -143,13 +143,13 @@
                                             <th>
                                                 <input class="form-check-input checkEvidencija" type="checkbox" value="<?= $row["id"] ?>">
                                             </th>
-                                            <th scope="row"><?= $row["id"] ?></th>
+                                            <th scope="row"><?= $row["proizvod_id"] ?></th>
                                             <td><?= $row["naziv"] ?></td>
                                             <td><?= $row["ucionica"] ?></td>
                                             <td><?= date_format(date_create($row["datum"]), "d.m.Y.") ?></td>
                                             <td class="d-sm-table-cell d-none"><?= $row["vrijeme"] ?></td>
                                             <td class="d-sm-table-cell d-none"><?= $row["username"] == $_SESSION["username"] ? $row["username"] . " (Vi)" : $row["username"] ?></td>
-                                            <td class="barcode open-modal" data-value="<?= $row["barkod"] ?>" data-image="<?php echo DS . APPFOLDER . DS ?>barcodes/code_<?php echo $row["barkod"] ?>.svg"><img style="background-color: white;" class="img-thumbnail img-fluid" src="<?php echo DS . APPFOLDER . DS ?>barcodes/code_<?php echo $row["barkod"] ?>.svg" alt="barcode alt"><?= $row["barkod"] ?></td>
+                                            <td class="font-monospace barcode open-modal" data-value="<?= $row["barkod"] ?>" data-image="<?php echo DS . APPFOLDER . DS ?>barcodes/code_<?php echo $row["barkod"] ?>.svg"><img style="background-color: white;" class="img-thumbnail img-fluid" src="<?php echo DS . APPFOLDER . DS ?>barcodes/code_<?php echo $row["barkod"] ?>.svg" alt="barcode alt"><?= $row["barkod"] ?></td>
                                         </tr>
 
                                 <?php }
@@ -161,12 +161,11 @@
                         </table>
                     </div>
                     <?php if ($result["row_count"] > 0) { ?>
-                        <button class="btn btn-sm btn-success fw-bold" type="submit" onclick="deleteItems()">IZBRIŠI ODABRANO</button>
+                        <button class="btn btn-sm btn-success fw-bold" onclick="deleteItems()">IZBRIŠI ODABRANO</button>
                         <button class="btn btn-sm btn-primary fw-bold" id="oznaci">OZNAČI SVE</button>
                         <button class="btn btn-sm btn-outline-primary fw-bold" id="makni">MAKNI SVE</button>
-                        <!-- <a href="<?php echo DS . APPFOLDER . DS ?>importdb?generate=true" class="btn btn-sm btn-outline-warning">GENERIRAJ BARKODOVE</a> -->
-                    <?php } ?>
-                </form>
+                        <?php } ?>
+                    </form>
 
             </div>
         </main>
@@ -178,7 +177,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content p-2">
                 <img style="background-color: white;" id="modal-image" class="img-thumbnail img-fluid" alt="barcode alt">
-                <p id="modal-text" class="text-center display-5"></p>
+                <p id="modal-text" class="text-center display-5 font-monospace"></p>
             </div>
         </div>
     </div>
@@ -215,7 +214,7 @@
                     placement: 'top',
                     title: $(this).data('tooltip')
                 });
-            })
+            });
 
             $("#i-input").change(function() {
                 var inventura_id = $(this).val();

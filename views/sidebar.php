@@ -16,25 +16,43 @@
 
             <li>
                 <a href="<?php echo DS . APPFOLDER . DS ?>admin/evidencija" class="<?php echo $sub_route == "evidencija" ? "bg-success" : ""  ?> nav-link text-white">
+                    <i class="bi bi-check-circle"></i>
                     Evidencija
                 </a>
             </li>
 
             <li>
                 <a href="<?php echo DS . APPFOLDER . DS ?>admin/ucionice" class="<?php echo $sub_route == "ucionice" ? "bg-success" : ""  ?> nav-link text-white">
-                    Učionice
+                    <i class="bi bi-book"></i>
+                    Učionice i tipovi
                 </a>
             </li>
 
             <li>
                 <a href="<?php echo DS . APPFOLDER . DS ?>admin/profesori" class="<?php echo $sub_route == "profesori" ? "bg-success" : ""  ?> nav-link text-white">
+                    <i class="bi bi-people"></i>
                     Profesori
                 </a>
             </li>
 
             <li>
                 <a href="<?php echo DS . APPFOLDER . DS ?>admin/proizvodi" class="<?php echo $sub_route == "proizvodi" ? "bg-success" : ""  ?> nav-link text-white">
+                    <i class="bi bi-box-seam"></i>
                     Proizvodi
+                </a>
+            </li>
+
+            <li>
+                <a href="<?php echo DS . APPFOLDER . DS ?>admin/usporedba" class="<?php echo $sub_route == "usporedba" ? "bg-success" : ""  ?> nav-link text-white">
+                    <i class="bi bi-arrow-left-right"></i>
+                    Usporedba
+                </a>
+            </li>
+
+            <li>
+                <a href="<?php echo DS . APPFOLDER . DS ?>admin/stanje" class="<?php echo $sub_route == "stanje" ? "bg-success" : ""  ?> nav-link text-white">
+                    <i class="bi bi-database-check"></i>
+                    Stanje
                 </a>
             </li>
 

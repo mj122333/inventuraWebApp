@@ -67,10 +67,10 @@ function translate_route($r) // prijevod ruta na hrvatski
         "login" => "prijava",
         "register" => "registracija",
         "logout" => "odjava",
-        "delete_items" => "izbriši stavke",
+        "js_upload" => "izbriši stavke",
         "404" => "404",
         "403" => "403",
-        "admin/delete_items" => "admin/izbriši stavke",
+        "admin/js_upload" => "admin/izbriši stavke",
         "importdb" => "import DB",
         "upload" => "upload",
         "bf" => "bf",
@@ -135,4 +135,23 @@ function check_login_cookie() // provjerava ako je login cookie i valjan i pokre
 
 function check_admin_with_cookie() // TODO provjeriti
 {
+}
+
+
+function get($param)
+{
+    if (isset($_GET[$param])) {
+        return $_GET[$param];
+    }
+
+    return NULL;
+}
+
+function post($param)
+{
+    if (isset($_POST[$param])) {
+        return $_POST[$param];
+    }
+
+    return NULL;
 }
