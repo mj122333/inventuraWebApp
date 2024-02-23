@@ -35,7 +35,7 @@ function getStanje()
             INNER JOIN vl_ucionice u
             ON u.id=s.ucionica_id
             INNER JOIN vl_proizvodi p
-            ON p.id=s.proizvod_id";
+            ON p.id=s.proizvod_id WHERE otpisano=0 ORDER BY p.id";
 
     $result = $db->select($sql);
     return $result;
@@ -59,7 +59,7 @@ function getPromjene($id) // id zadnje inventure
     //     INNER JOIN vl_proizvodi p ON e.proizvod_id = p.id 
     //     INNER JOIN vl_barkodovi b ON b.proizvod_id = e.proizvod_id 
     //     WHERE e.aktivno = 1 AND inventura_id=? limit 1";
-    $sql_e = "SELECT CONCAT(e.proizvod_id, '_', e.ucionica_id) as par, p.id as proizvod_id, COUNT(*) AS kolicina, b.barkod, u.id as ucionica_id,
+    $sql_e = "SELECT p.slika, CONCAT(e.proizvod_id, '_', e.ucionica_id) as par, p.id as proizvod_id, COUNT(*) AS kolicina, b.barkod, u.id as ucionica_id,
             u.oznaka as ucionica, p.naziv
             FROM vl_evidencija e
             INNER JOIN vl_users usr ON e.user_id = usr.id 
@@ -70,7 +70,7 @@ function getPromjene($id) // id zadnje inventure
             GROUP BY e.proizvod_id, e.ucionica_id ORDER BY p.id";
 
     // sql za stanje
-    $sql_s = "SELECT CONCAT(s.proizvod_id, '_', s.ucionica_id) as par, s.proizvod_id as proizvod_id, s.kolicina as kolicina, b.barkod, u.id as ucionica_id, 
+    $sql_s = "SELECT p.slika, CONCAT(s.proizvod_id, '_', s.ucionica_id) as par, s.proizvod_id as proizvod_id, s.kolicina as kolicina, b.barkod, u.id as ucionica_id, 
         u.oznaka as ucionica, p.naziv
         FROM vl_stanje s
         INNER JOIN vl_ucionice u ON s.ucionica_id = u.id 

@@ -63,7 +63,7 @@
 
                 <?php $result = getPromjene(32, 31); ?>
                 <?php if (checkInventura()) : ?>
-                    <h4>Inventura <i>#<?= $zadnja_inventura ?></i> još traje</h1>
+                    <h4 class="alert alert-danger col-12 col-sm-6 col-lg-4">Inventura <i>#<?= $zadnja_inventura ?></i> još traje</h1>
                     <?php else : ?>
                         <h4>Inventura <i>#<?= $zadnja_inventura ?></i> je završila</h1>
                         <?php endif; ?>
@@ -81,6 +81,7 @@
                                             <thead class="position-sticky" style="top: 0;">
                                                 <tr>
                                                     <th class="text-gray">ID</th>
+                                                    <th class="text-gray">Slika</th>
                                                     <th class="text-gray">Proizvod</th>
                                                     <th class="text-gray">Učionica</th>
                                                     <th class="text-gray">Količina</th>
@@ -94,15 +95,17 @@
                                                     <tr>
                                                         <th scope="row"><?= $row["proizvod_id"] ?></th>
 
-                                                        <td class="<?php
-                                                                    if ($row["promjena"] == "novo") {
-                                                                        echo "text-success fw-bold";
-                                                                    } elseif ($row["promjena"] == "nestalo") {
-                                                                        echo "text-danger fw-bold";
-                                                                    } else {
-                                                                        echo "";
-                                                                    }
-                                                                    ?>"><?= $row["naziv"] ?></td>
+                                                        <?php if (!empty($row["slika"]) && file_exists("images/" . $row["slika"])) : ?>
+                                                            <td class="open-modal" data-value="<?= $row["naziv"] ?>" data-image="<?php echo DS . APPFOLDER . DS ?>images/<?= $row["slika"] ?>">
+                                                                <img class="barcode img-thumbnail img-fluid" src="<?php echo DS . APPFOLDER . DS ?>images/<?= $row["slika"] ?>" alt="Nema slike">
+                                                            </td>
+                                                        <?php else : ?>
+                                                            <td>
+                                                                <img class="barcode img-thumbnail img-fluid" alt="Nema slike">
+                                                            </td>
+                                                        <?php endif; ?>
+
+                                                        <td class=""><?= $row["naziv"] ?></td>
 
                                                         <td id="id<?= $i ?>" class="<?php echo $row["promjena"] == "ucionica" ? "text-warning fw-bold" : "" ?>"><?= $row["ucionica"] ?></td>
 
@@ -118,13 +121,11 @@
 
                                                         <td>
                                                             <?php if ($row["promjena"] == "novo") : ?>
-                                                                <!-- <button data-forid="id<?= $i ?>" data-color="bg-success" data-message="Prihvaćeno" onclick="prihvatiPromjenu(this, <?= $row['proizvod_id'] ?>, <?= $row['ucionica_stara'] ?>, <?= $row['ucionica_nova'] ?>)" class="toastButton btn btn-sm btn-success">Prihvati <i class="bi bi-check-lg"></i></button> -->
-                                                                <button data-forid="id<?= $i ?>" data-color="bg-success" data-message="Prihvaćeno" onclick="" class="toastButton btn btn-sm btn-success">Prihvati <i class="bi bi-check-lg"></i></button>
+                                                                <button data-forid="id<?= $i ?>" data-color="bg-success" data-message="Prihvaćeno" onclick="prihvatiPromjenu(this, '<?= $row['promjena'] ?>', '<?= $row['proizvod_id'] ?>', '<?= $row['ucionica_id'] ?>', <?= $row['kolicina'] ?>)" class="toastButton btn btn-sm btn-success">Prihvati <i class="bi bi-check-lg"></i></button>
                                                             <?php elseif ($row["promjena"] == "nestalo") : ?>
-                                                                <!-- <button data-forid="id<?= $i ?>" data-color="bg-danger" data-message="Otpisano" onclick="otpisiPromjenu(this, '<?= $row['naziv'] ?>')" class="toastButton btn btn-sm btn-danger">Otpiši <i class="bi bi-x-lg"></i></button> -->
-                                                                <button data-forid="id<?= $i ?>" data-color="bg-danger" data-message="Otpisano" onclick="" class="toastButton btn btn-sm btn-danger">Otpiši <i class="bi bi-x-lg"></i></button>
+                                                                <button data-forid="id<?= $i ?>" data-color="bg-danger" data-message="Otpisano" onclick="prihvatiPromjenu(this, '<?= $row['promjena'] ?>', '<?= $row['proizvod_id'] ?>', '<?= $row['ucionica_id'] ?>', <?= $row['kolicina'] ?>)" class="toastButton btn btn-sm btn-danger">Otpiši <i class="bi bi-x-lg"></i></button>
                                                             <?php elseif ($row["promjena"] == "kolicina") : ?>
-                                                                <button data-forid="id<?= $i ?>" data-color="bg-warning" data-message="Prihvaćeno" onclick="" class="toastButton btn btn-sm btn-warning">Prihvati <i class="bi bi-check-lg"></i></button>
+                                                                <button data-forid="id<?= $i ?>" data-color="bg-warning" data-message="Prihvaćeno" onclick="prihvatiPromjenu(this, '<?= $row['promjena'] ?>', '<?= $row['proizvod_id'] ?>', '<?= $row['ucionica_id'] ?>', <?= ($row['prijasnja_kolicina'] + $row['kolicina']) ?>)" class="toastButton btn btn-sm btn-warning">Prihvati <i class="bi bi-check-lg"></i></button>
                                                             <?php endif; ?>
                                                         </td>
 
@@ -182,25 +183,14 @@
             return new bootstrap.Tooltip(tooltipTriggerEl)
         })
 
-        function prihvatiPromjenu(el, proizvodId, staraUcionica, novaUcionica) { // proizvodId, ..., ..., kolicina
-            console.log(proizvodId + ": " + staraUcionica + " -> " + novaUcionica);
-            promjenaStanja(proizvodId, staraUcionica, novaUcionica);
+        function prihvatiPromjenu(el, vrsta, proizvod_id, ucionica_id, kolicina) {
+            // console.log(proizvodId + ": " + staraUcionica + " -> " + novaUcionica);
+            console.log(vrsta, proizvod_id, ucionica_id, kolicina)
+            promjenaStanja(vrsta, proizvod_id, ucionica_id, kolicina);
+
 
             var button = $(el);
-            // var td = button.parent();
-            var td = $("#" + button.data('forid'));
             button.toggle();
-            td.removeClass("text-warning").addClass("text-success");
-        }
-
-        function otpisiPromjenu(el, naziv) {
-            console.log('otpisano ->', naziv);
-
-            var button = $(el);
-            // var td = button.parent();
-            var td = $("#" + button.data('forid'))
-            button.toggle();
-            td.addClass("text-danger fw-bold");
         }
 
         function clearSearch(el) {

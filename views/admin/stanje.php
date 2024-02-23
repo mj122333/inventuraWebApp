@@ -137,21 +137,24 @@
                     var image = new Image();
                     image.src = element[1];
 
-                    if (column_index % 2 == 0) {
-                        pdf.text(10, index * (imgHeight + 15) + 5, element[2]);
-                        pdf.addImage(image, 'PNG', 10, index * (imgHeight + 15) + 10, imgWidth, imgHeight);
-                        pdf.text(10, index * (imgHeight + 15) + 20 + 10, element[0]);
-                    } else {
-                        pdf.text(imgWidth + spacer, index * (imgHeight + 15) + 5, element[2]);
-                        pdf.addImage(image, 'PNG', imgWidth + spacer, index * (imgHeight + 15) + 10, imgWidth, imgHeight);
-                        pdf.text(imgWidth + spacer, index * (imgHeight + 15) + 20 + 10, element[0]);
-                        index += 1.7;
+                    try {
+                        if (column_index % 2 == 0) {
+                            pdf.text(10, index * (imgHeight + 15) + 5, element[2]);
+                            pdf.addImage(image, 'PNG', 10, index * (imgHeight + 15) + 10, imgWidth, imgHeight);
+                            pdf.text(10, index * (imgHeight + 15) + 20 + 10, element[0]);
+                        } else {
+                            pdf.text(imgWidth + spacer, index * (imgHeight + 15) + 5, element[2]);
+                            pdf.addImage(image, 'PNG', imgWidth + spacer, index * (imgHeight + 15) + 10, imgWidth, imgHeight);
+                            pdf.text(imgWidth + spacer, index * (imgHeight + 15) + 20 + 10, element[0]);
+                            index += 1.7;
+                        }
+                    } catch {
+                        console.log("Greška: " + image.src);
                     }
                     column_index++;
                     counter++;
 
-                    if(counter == 14)
-                    {
+                    if (counter == 14) {
                         pdf.addPage();
                         counter = column_index = index = 0;
                     }

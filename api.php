@@ -29,6 +29,7 @@ function ucioniceChart()
 function proizvodiBarkodovi()
 {
     global $db;
+    generatePNG();
     $result = $db->select("SELECT p.naziv, b.* FROM vl_barkodovi b, vl_proizvodi p WHERE b.proizvod_id=p.id;");
     echo json_encode($result["result"]);
 }
@@ -40,7 +41,7 @@ function generatePNG()
 }
 
 
-$allowed = array("obracun", "generirajBarkodove", "tipoviChart", "ucioniceChart", "proizvodiBarkodovi");
+$allowed = array("obracun", "generirajBarkodove", "tipoviChart", "ucioniceChart", "proizvodiBarkodovi", "generatePNG");
 
 
 if (in_array($sub_route, $allowed)) {

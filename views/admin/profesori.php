@@ -4,7 +4,7 @@
 <head>
     <?php require_once "views/head_links.php"; ?>
     <title>Admin</title>
-    <script src="/<?php echo APPFOLDER ?>/js/delete_items.js"></script>
+    <script src="/<?php echo APPFOLDER ?>/js/get_cookie.js"></script>
 </head>
 
 <style>
@@ -51,29 +51,33 @@
 
             <?php include 'views/sidebar.php'; ?>
 
-            <div class="container col-11 col-md-8" style="overflow-y: auto;">
+            <div class="p-3 bg-tertiary w-100" style="overflow-y: auto;">
 
-                <div class="row my-2">
+                <div class="row gy-3">
+
                     <?php
                     $result = getProfesori();
 
                     if ($result['row_count'] > 0) {
                         foreach ($result["result"] as $row) { ?>
 
-                            <div class="card border-0 shadow-sm col-3 pt-2 mx-3 mb-5">
-                                <div class="rounded" style="display: flex; align-items: center; justify-content: center; overflow: hidden; height: 128px;">
-                                    <img src="<?php echo DS . APPFOLDER . DS ?>images/proizvod_422.jpg" class="card-img-top" alt="">
-                                </div>
-                                <div class="card-body p-0">
-                                    <h5 class="card-title"><?= $row["ime"] . " " . $row["prezime"] . " (" . $row["username"] . ")" ?></h5>
-                                    <p class="card-text fw-bold <?php echo $row["role"] == "admin" ? "text-danger" : "text-success" ?>"><?= $row["role"] ?></p>
-                                    <a href="evidencija?p=<?= $row["id"] ?>&i=<?= $zadnja_inventura ?>" class="link-secondary link-underline-secondary link-underline-opacity-0 link-underline-opacity-75-hover">Evidencija od korisnika</a>
+                            <div style="height: fit-content;" class="col-6 col-md-3">
+                                <div class="card border">
+                                    <a class="card-body link-underline link-underline-opacity-0" href="evidencija?p=<?= $row["id"] ?>&i=<?= $zadnja_inventura ?>">
+                                        <h5 class="btn btn-icon"><i class="bi bi-person"></i></h5>
+                                        <?= $row["ime"] . " " . $row["prezime"] . " (" . $row["username"] . ")" ?>
+                                        <p class="card-text fw-semibold <?php echo $row["role"] == "admin" ? "text-danger" : "text-success" ?>"><?= $row["role"] ?></p>
+                                    </a>
+
+                                    <button class="btn btn-primary m-3" onclick="changeRole(<?= $row['id'] ?>, '<?= $row['role'] == 'admin' ? 'user' : 'admin' ?>')">Promijeni ulogu</button>
+                                    
                                 </div>
                             </div>
 
                     <?php }
                     }
                     ?>
+
                 </div>
 
             </div>
@@ -93,6 +97,36 @@
 
 
     <script>
+        function changeRole(id, role) {
+            const sessionCookie = getCookie("sessionid");
+            const requestOptions = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Cookie': 'sessionid=' + sessionCookie,
+                },
+                body: JSON.stringify({
+                    "data": {
+                        "id": id,
+                        "role": role,
+                    },
+                    "action": "change_role"
+                })
+            };
+
+            var url = "js_upload";
+            fetch(url, requestOptions)
+                .then(response => response.text())
+                .then(data => {
+                    location.reload();
+
+                    // console.log(data)
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
         $(document).ready(function() {
             $("#oznaci").click(function() {
                 $(".checkEvidencija").each(function() {

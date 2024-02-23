@@ -9,7 +9,7 @@ function getCookie(name) {
     return null;
 }
 
-function promjenaStanja(proizvodId, staraUcionica, novaUcionica) {
+function promjenaStanja(vrsta, proizvod_id, ucionica_id, kolicina) {
 
     const sessionCookie = getCookie("sessionid");
     const requestOptions = {
@@ -19,10 +19,11 @@ function promjenaStanja(proizvodId, staraUcionica, novaUcionica) {
             'Cookie': 'sessionid=' + sessionCookie,
         },
         body: JSON.stringify({
-            "ids": {
-                "proizvod_id": proizvodId,
-                "stara_ucionica": staraUcionica,
-                "nova_ucionica": novaUcionica,
+            "data": {
+                "proizvod_id": proizvod_id,
+                "ucionica_id": ucionica_id,
+                "kolicina": kolicina,
+                "vrsta": vrsta
             },
             "action": "promjena_stanja"
         })
@@ -32,41 +33,9 @@ function promjenaStanja(proizvodId, staraUcionica, novaUcionica) {
     fetch(url, requestOptions)
         .then(response => response.text())
         .then(data => {
-            // location.reload();
+            location.reload();
 
             // console.log(data)
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-}
-
-
-function otpisStanja(proizvodId) {
-    const sessionCookie = getCookie("sessionid"); // TODO provjeriti ako je admin
-    const requestOptions = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Cookie': 'sessionid=' + sessionCookie,
-        },
-        body: JSON.stringify({
-            "ids": {
-                "proizvod_id": proizvodId,
-                "stara_ucionica": staraUcionica,
-                "nova_ucionica": novaUcionica,
-            },
-            "action": "otpis"
-        })
-    };
-
-    var url = "js_upload";
-    fetch(url, requestOptions)
-        .then(response => response.text())
-        .then(data => {
-            // location.reload();
-
-            console.log(data)
         })
         .catch(error => {
             console.error('Error:', error);

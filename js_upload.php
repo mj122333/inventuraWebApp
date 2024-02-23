@@ -29,24 +29,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             if ($data["action"] == "promjena_stanja") {
-                $proizvod_id = $data["ids"]["proizvod_id"];
-                $stara_ucionica = $data["ids"]["stara_ucionica"];
-                $nova_ucionica = $data["ids"]["nova_ucionica"];
+                $proizvod_id = $data["data"]["proizvod_id"];
+                $ucionica_id = $data["data"]["ucionica_id"];
+                $kolicina = $data["data"]["kolicina"];
+                $vrsta = $data["data"]["vrsta"];
 
-                $db->update("UPDATE vl_stanje SET ucionica_id=? WHERE proizvod_id=? AND ucionica_id=?", array($nova_ucionica, $proizvod_id, $stara_ucionica));
+                if ($vrsta == "novo") {
+                    $db->insert("INSERT INTO vl_stanje (proizvod_id, ucionica_id, kolicina) VALUES (?,?,?)", array($proizvod_id, $ucionica_id, $kolicina));
+                } elseif ($vrsta == "kolicina") {
+                    $db->update("UPDATE vl_stanje SET kolicina=? WHERE proizvod_id=? AND ucionica_id=?", array($kolicina, $proizvod_id, $ucionica_id));
+                } elseif ($vrsta == "nestalo") {
+                    $db->update("UPDATE vl_stanje SET otpisano=1 WHERE proizvod_id=? AND ucionica_id=?", array($proizvod_id, $ucionica_id));
+                }
+                echo json_encode(["response" => "success"]);
+            }
+
+            if ($data["action"] == "change_role") {
+                $id = $data["data"]["id"];
+                $role = $data["data"]["role"];
+                $db->update("UPDATE vl_users SET role=? WHERE id=?", array($role, $id));
             }
         } else {
             // krivi podaci, JSON nije array
             http_response_code(400);
-            echo json_encode(array('error' => 'Invalid JSON data'));
+            echo json_encode(array('error' => 'Nevažeći JSON format'));
         }
     } else {
         // krivi JSON format ili nemoze procitati
         http_response_code(400);
-        echo json_encode(array('error' => 'Invalid JSON format or unable to read data'));
+        echo json_encode(array('error' => 'Nevažeći JSON format ili se podaci ne mogu čitati'));
     }
 } else {
     // ako nije POST
     http_response_code(405);
-    echo json_encode(array('error' => 'Invalid request method'));
+    echo json_encode(array('error' => 'Nevažeći način zahtjeva'));
 }
