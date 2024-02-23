@@ -47,7 +47,7 @@
 
 
 <body data-bs-theme="light">
-<script defer>
+    <script defer>
         $("body").attr('data-bs-theme', initialTheme);
     </script>
 
@@ -58,21 +58,20 @@
         <main class="d-flex flex-row" style="flex: 1;">
             <?php include 'sidebar.php'; ?>
 
-            <div id="pozadina" class="h-100 w-100 bg-tertiary">
+            <div class="w-100 bg-tertiary p-3">
+                <div class="row gy-3 d-flex justify-content-center">
 
-                <?php if (true) : ?>
-                    <!-- <img src="<?php echo DS . APPFOLDER . DS ?>favicon/logo_light_orange.svg" alt="Logo SVG" class="mx-auto" /> -->
-                <?php endif; ?>
-
-                <div class="row h-25 my-5 m-0 p-0">
-                    <a href="<?php echo DS . APPFOLDER . DS ?>scan" class="link-secondary link-underline-opacity-0 container ikona-parent shadow border h-100 py-3 col-6 col-lg-3">
-                        <p class="d-block">SKEN</p>
-                        <i class="ikona bi bi-upc-scan"></i>
+                    <a style="height: fit-content;" class="col-12 col-md-3 link-underline link-underline-opacity-0" href="<?php echo DS . APPFOLDER . DS ?>scan">
+                        <div class="card border">
+                            <div class="card-body">
+                                <h5 class="btn btn-icon"><i class="bi bi-upc-scan"></i></h5>
+                                <p class="card-text fw-semibold">Sken</p>
+                                <h1 id="count-up-proizvodi" class="fw-bold"></h1>
+                            </div>
+                        </div>
                     </a>
+
                 </div>
-
-                <!-- <img src="<?php echo DS . APPFOLDER . DS ?>favicon/logo_light_orange.svg" alt="Logo SVG" class="img-fluid" /> -->
-
             </div>
         </main>
 
