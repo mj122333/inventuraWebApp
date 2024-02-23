@@ -12,6 +12,10 @@
         height: 100vh;
     }
 
+    /* ::-webkit-scrollbar {
+        width: 0;
+    } */
+
     .custom-scrollbar {
         position: relative;
         /* height: 30rem; */
@@ -40,7 +44,10 @@
     }
 </style>
 
-<body data-bs-theme="dark">
+<body data-bs-theme="light">
+    <script defer>
+        $("body").attr('data-bs-theme', initialTheme);
+    </script>
 
     <div class="h-100 d-flex flex-column" style="flex: 1;">
 
@@ -52,78 +59,93 @@
 
             <!-- TODO omoguciti prikaz samo ako je inventura zavrsila -->
 
-            <div class="container-fluid mx-0 py-2 h-100" style="font-size: 10px">
+            <div class="container-fluid mx-0 p-3 h-100 bg-tertiary" style="font-size: 10px">
 
-                <form id="form" onsubmit="return false;">
-
-                    <?php $result = getPromjene(32, 31); ?>
-                    <?php if (checkInventura()) : ?>
-                        <h1>Inventura <i>#<?= $zadnja_inventura ?></i> još traje</h1>
+                <?php $result = getPromjene(32, 31); ?>
+                <?php if (checkInventura()) : ?>
+                    <h4>Inventura <i>#<?= $zadnja_inventura ?></i> još traje</h1>
                     <?php else : ?>
-                        <h1>Inventura <i>#<?= $zadnja_inventura ?></i> je završila</h1>
-                    <?php endif; ?>
-                    <h2><?= $result["row_count"] ?> rezultat/a</h2>
-                    <div class="border table-wrapper-scroll-y custom-scrollbar">
-                        <!-- <table class="table table-dark table-hover"> -->
+                        <h4>Inventura <i>#<?= $zadnja_inventura ?></i> je završila</h1>
+                        <?php endif; ?>
+                        <h2><?= $result["row_count"] ?> rezultat/a</h2>
 
-                        <table class="table table-dark table-hover" style="font-size: 14px;">
-                            <?php
-                            if ($result["row_count"] > 0) {
-                            ?>
-                                <thead class="position-sticky" style="top: 0;">
-                                    <tr>
-                                        <!-- <th scope="col">Obriši</th> -->
-                                        <th>ID</th>
-                                        <th>Proizvod</th>
-                                        <th>Učionica</th>
-                                        <!-- <th>Datum</th> -->
-                                        <!-- <th class="d-sm-table-cell d-none">Vrijeme</th> -->
-                                        <!-- <th class="d-sm-table-cell d-none">Korisnik</th> -->
-                                        <th>Barkod</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($result["result"] as $row) { ?>
-                                        <tr>
-                                            <!-- <th>
-                                                <input class="form-check-input checkEvidencija" type="checkbox" value="<?= $row["id"] ?>">
-                                            </th> -->
-                                            <th scope="row"><?= $row["proizvod_id"] ?></th>
+                        <div class="bg-main rounded p-3 border">
+                            <form id="form" onsubmit="return false;">
 
-                                            <td class="<?php
-                                                        if ($row["promjena"] == "novo") {
-                                                            echo "text-success fw-bold";
-                                                        } elseif ($row["promjena"] == "nestalo") {
-                                                            echo "text-danger fw-bold";
-                                                        } else {
-                                                            echo "";
-                                                        }
-                                                        ?>"><?= $row["naziv"] ?></td>
+                                <div class="table-wrapper-scroll-y custom-scrollbar">
 
-                                            <td class="<?php echo $row["promjena"] == "ucionica" ? "text-warning fw-bold" : "" ?>">
-                                                <?= $row["ucionica"] ?>
-                                                <?php if ($row["promjena"] == "ucionica") : ?>
-                                                    <button data-color="bg-success" data-message="Prihvaćeno" onclick="prihvatiPromjenu(this, <?= $row['proizvod_id'] ?>, <?= $row['ucionica_stara'] ?>, <?= $row['ucionica_nova'] ?>)" class="toastButton btn btn-sm btn-success">Prihvati <i class="bi bi-check-lg"></i></button>
-                                                <?php elseif ($row["promjena"] == "nestalo") : ?>
-                                                    <button data-color="bg-danger" data-message="Otpisano" onclick="otpisiPromjenu(this, '<?= $row['naziv'] ?>')" class="toastButton btn btn-sm btn-danger">Otpiši <i class="bi bi-x-lg"></i></button>
-                                                <?php endif; ?>
-                                            </td>
+                                    <table class="darkTableToggle table table-hover table-borderless" style="font-size: 14px;">
+                                        <?php
+                                        if ($result["row_count"] > 0) {
+                                        ?>
+                                            <thead class="position-sticky" style="top: 0;">
+                                                <tr>
+                                                    <th class="text-gray">ID</th>
+                                                    <th class="text-gray">Proizvod</th>
+                                                    <th class="text-gray">Učionica</th>
+                                                    <th class="text-gray">Količina</th>
+                                                    <th class="text-gray">Akcija</th>
+                                                    <th class="text-gray">Barkod</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php $i = 0;
+                                                foreach ($result["result"] as $row) { ?>
+                                                    <tr>
+                                                        <th scope="row"><?= $row["proizvod_id"] ?></th>
 
-                                            <!-- <td><?= date_format(date_create($row["datum"]), "d.m.Y.") ?></td> -->
-                                            <!-- <td class="d-sm-table-cell d-none"><?= $row["vrijeme"] ?></td> -->
-                                            <!-- <td class="d-sm-table-cell d-none"><?= $row["username"] == $_SESSION["username"] ? $row["username"] . " (Vi)" : $row["username"] ?></td> -->
-                                            <td class="font-monospace barcode open-modal" data-value="<?= $row["barkod"] ?>" data-image="<?php echo DS . APPFOLDER . DS ?>barcodes/code_<?php echo $row["barkod"] ?>.svg"><img style="background-color: white;" class="img-thumbnail img-fluid" src="<?php echo DS . APPFOLDER . DS ?>barcodes/code_<?php echo $row["barkod"] ?>.svg" alt="barcode alt"><?= $row["barkod"] ?></td>
-                                        </tr>
+                                                        <td class="<?php
+                                                                    if ($row["promjena"] == "novo") {
+                                                                        echo "text-success fw-bold";
+                                                                    } elseif ($row["promjena"] == "nestalo") {
+                                                                        echo "text-danger fw-bold";
+                                                                    } else {
+                                                                        echo "";
+                                                                    }
+                                                                    ?>"><?= $row["naziv"] ?></td>
 
-                                <?php }
-                                } else {
-                                    echo "<th>Još nema zabilježenih evidencija</th>";
-                                }
-                                ?>
-                                </tbody>
-                        </table>
-                    </div>
-                </form>
+                                                        <td id="id<?= $i ?>" class="<?php echo $row["promjena"] == "ucionica" ? "text-warning fw-bold" : "" ?>"><?= $row["ucionica"] ?></td>
+
+                                                        <th scope="row" class="<?php if ($row["promjena"] != "nema") {
+                                                                                    echo $row["kolicina"] > 0 ? "text-success" : "text-danger";
+                                                                                } ?>">
+                                                            <?= $row["kolicina"] > 0 && $row["promjena"] != "nema" ? "+" . $row["kolicina"] : $row["kolicina"] ?>
+                                                            <?php if ($row["promjena"] == "kolicina") : ?>
+                                                                <?= "(" . $row["prijasnja_kolicina"] . ")" ?>
+                                                                <?= " -> " . ($row["prijasnja_kolicina"] + $row["kolicina"]) ?>
+                                                            <?php endif; ?>
+                                                        </th>
+
+                                                        <td>
+                                                            <?php if ($row["promjena"] == "novo") : ?>
+                                                                <!-- <button data-forid="id<?= $i ?>" data-color="bg-success" data-message="Prihvaćeno" onclick="prihvatiPromjenu(this, <?= $row['proizvod_id'] ?>, <?= $row['ucionica_stara'] ?>, <?= $row['ucionica_nova'] ?>)" class="toastButton btn btn-sm btn-success">Prihvati <i class="bi bi-check-lg"></i></button> -->
+                                                                <button data-forid="id<?= $i ?>" data-color="bg-success" data-message="Prihvaćeno" onclick="" class="toastButton btn btn-sm btn-success">Prihvati <i class="bi bi-check-lg"></i></button>
+                                                            <?php elseif ($row["promjena"] == "nestalo") : ?>
+                                                                <!-- <button data-forid="id<?= $i ?>" data-color="bg-danger" data-message="Otpisano" onclick="otpisiPromjenu(this, '<?= $row['naziv'] ?>')" class="toastButton btn btn-sm btn-danger">Otpiši <i class="bi bi-x-lg"></i></button> -->
+                                                                <button data-forid="id<?= $i ?>" data-color="bg-danger" data-message="Otpisano" onclick="" class="toastButton btn btn-sm btn-danger">Otpiši <i class="bi bi-x-lg"></i></button>
+                                                            <?php elseif ($row["promjena"] == "kolicina") : ?>
+                                                                <button data-forid="id<?= $i ?>" data-color="bg-warning" data-message="Prihvaćeno" onclick="" class="toastButton btn btn-sm btn-warning">Prihvati <i class="bi bi-check-lg"></i></button>
+                                                            <?php endif; ?>
+                                                        </td>
+
+
+                                                        <!-- <td><?= date_format(date_create($row["datum"]), "d.m.Y.") ?></td> -->
+                                                        <!-- <td class="d-sm-table-cell d-none"><?= $row["vrijeme"] ?></td> -->
+                                                        <!-- <td class="d-sm-table-cell d-none"><?= $row["username"] == $_SESSION["username"] ? $row["username"] . " (Vi)" : $row["username"] ?></td> -->
+                                                        <td class="font-monospace barcode open-modal" data-value="<?= $row["barkod"] ?>" data-image="<?php echo DS . APPFOLDER . DS ?>barcodes/code_<?php echo $row["barkod"] ?>.svg"><img style="background-color: white;" class="img-thumbnail img-fluid" src="<?php echo DS . APPFOLDER . DS ?>barcodes/code_<?php echo $row["barkod"] ?>.svg" alt="barcode alt"><?= $row["barkod"] ?></td>
+                                                    </tr>
+
+                                            <?php $i++;
+                                                }
+                                            } else {
+                                                echo "<th>Još nema zabilježenih evidencija</th>";
+                                            }
+                                            ?>
+                                            </tbody>
+                                    </table>
+                                </div>
+                            </form>
+                        </div>
 
             </div>
         </main>
@@ -165,7 +187,8 @@
             promjenaStanja(proizvodId, staraUcionica, novaUcionica);
 
             var button = $(el);
-            var td = button.parent();
+            // var td = button.parent();
+            var td = $("#" + button.data('forid'));
             button.toggle();
             td.removeClass("text-warning").addClass("text-success");
         }
@@ -174,7 +197,8 @@
             console.log('otpisano ->', naziv);
 
             var button = $(el);
-            var td = button.parent();
+            // var td = button.parent();
+            var td = $("#" + button.data('forid'))
             button.toggle();
             td.addClass("text-danger fw-bold");
         }

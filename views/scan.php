@@ -12,7 +12,10 @@
     }
 </style>
 
-<body data-bs-theme="dark">
+<body data-bs-theme="light">
+<script defer>
+        $("body").attr('data-bs-theme', initialTheme);
+    </script>
 
     <div class="h-100 d-flex flex-column" style="flex: 1;">
 

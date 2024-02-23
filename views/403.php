@@ -81,7 +81,10 @@
     }
 </style>
 
-<body data-bs-theme="dark" class="d-flex justify-content-center align-items-center">
+<body data-bs-theme="light" class="d-flex justify-content-center align-items-center">
+<script defer>
+        $("body").attr('data-bs-theme', initialTheme);
+    </script>
     <div class="container w-auto d-flex flex-column align-items-center">
         <div class="alert alert-danger m-0">
             <span class="fw-bold">403 Forbidden:&nbsp;</span>nemate pristup ovoj stranici

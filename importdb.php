@@ -23,101 +23,7 @@
 
 <?php
 
-require_once __DIR__ . '/vendor/autoload.php';
-
-// use FPDF\FPDF;
-
-use Picqer\Barcode\BarcodeGeneratorPNG;
-use Picqer\Barcode\BarcodeGeneratorSVG;
-
-$barcodes_folder = 'barcodes/';
-
-function generate_barcodes_proizvodi()
-{
-    global $db, $barcodes_folder;
-
-    $sql = "SELECT * from vl_barkodovi";
-    $result = $db->select($sql);
-    $barkodovi = array();
-    if ($result["row_count"] != 0) {
-        foreach ($result["result"] as $row) {
-            $barkodovi[] = $row["barkod"];
-        }
-    }
-
-    print_r(count($barkodovi));
-    echo "<br>";
-
-    $sql = "SELECT * FROM vl_proizvodi";
-    $result = $db->select($sql)["result"];
-    $counter = 0;
-
-    foreach ($result as $row) {
-        $ID = $row['id'];
-        $tip = $row['tip_id'];
-
-        $barcodeData = "10" . str_pad($tip, 4, '0', STR_PAD_LEFT) . str_pad($ID, 6, '0', STR_PAD_LEFT);
-        $barcodeData .= calculateEAN13CheckDigit($barcodeData);
-        $barcode_file_path = $barcodes_folder . "code_{$barcodeData}.svg";
-
-        if (!file_exists($barcode_file_path)) {
-            $generator = new BarcodeGeneratorSVG();
-            $barcodeImage = $generator->getBarcode($barcodeData, $generator::TYPE_EAN_13);
-            file_put_contents($barcode_file_path, $barcodeImage);
-            $counter++;
-        }
-
-        if (!in_array($barcodeData, $barkodovi)) {
-            $sql = "INSERT INTO vl_barkodovi (proizvod_id, barkod) VALUES (?, ?)";
-            $db->insert($sql, array($ID, $barcodeData));
-        }
-    }
-
-    return $counter;
-}
-
-function generate_barcodes_ucionice()
-{
-    global $db, $barcodes_folder;
-
-    $sql = "SELECT * from vl_ucionice";
-    $result = $db->select($sql);
-    $barkodovi = array();
-    if ($result["row_count"] != 0) {
-        foreach ($result["result"] as $row) {
-            $barkodovi[] = $row["barkod"];
-        }
-    }
-
-    print_r(count($barkodovi));
-    echo "<br>";
-
-    $sql = "SELECT * FROM vl_ucionice";
-    $result = $db->select($sql)["result"];
-    $counter = 0;
-
-    foreach ($result as $row) {
-        $ID = $row['id'];
-
-        $barcodeData = "200000" . str_pad($ID, 6, '0', STR_PAD_LEFT);
-        $barcodeData .= calculateEAN13CheckDigit($barcodeData);
-        $barcode_file_path = $barcodes_folder . "code_{$barcodeData}.svg";
-
-        if (!file_exists($barcode_file_path)) {
-            $generator = new BarcodeGeneratorSVG();
-            $barcodeImage = $generator->getBarcode($barcodeData, $generator::TYPE_EAN_13);
-            file_put_contents($barcode_file_path, $barcodeImage);
-            $counter++;
-        }
-
-        if (!in_array($barcodeData, $barkodovi)) {
-            $sql = "UPDATE vl_ucionice SET barkod=? WHERE id=?";
-            $db->insert($sql, array($barcodeData, $ID));
-        }
-    }
-
-    return $counter;
-}
+require_once 'generate_barcodes.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
@@ -129,46 +35,6 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
             echo "<br><b>BARKODOVI GENERIRANI (UČIONICE): " . $c2 . "</b><br>";
         }
     }
-
-    // if (isset($_GET["q"])) {
-    //     $q = $_GET["q"];
-    //     $db->select($q, array());
-    // }
-
-    // if (isset($_GET["import"])) {
-
-    //     if ($_GET["import"] == "true") {
-    //         $sqlFile = 'db/inventura.sql';
-
-    //         $sql = file_get_contents($sqlFile);
-
-    //         $queries = explode(';', $sql);
-
-    //         foreach ($queries as $query) {
-    //             $query = trim($query);
-
-    //             if (!empty($query)) {
-    //                 $result = $db->insert($query);
-
-    //                 if (!$result) {
-    //                     echo "Greška pri izvršavanju: " . $conn->error;
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
-
-    // if (isset($_GET["drop"])) {
-    //     if ($_GET["drop"] == "vito123") {
-    //         $tables = $db->select("SHOW TABLES")["result"];
-    //         print_r($tables);
-    //         foreach ($tables as $table) {
-    //             $t = $table['Tables_in_jambrosi_inventura'];
-    //             $db->delete("DROP TABLE IF EXISTS $t");
-    //             echo "<span style='color: red;'>Tablica <b>" . $t . "</b> izbrisana.</span><br>";
-    //         }
-    //     }
-    // }
 }
 
 
@@ -294,41 +160,6 @@ function show_barcodes()
     echo "</div>";
 }
 
-// function generatePDF()
-// {
-//     global $db;
-//     $result = $db->select("SELECT barkod, vl_proizvodi.naziv FROM vl_barkodovi, vl_proizvodi WHERE vl_barkodovi.proizvod_id=vl_proizvodi.id;");
-
-//     // Create a new PDF instance
-//     $pdf = new PDF();
-//     $pdf->AddPage();
-
-//     $counter = 0;
-
-//     foreach ($result["result"] as $row) {
-//         if ($counter % 3 == 0 && $counter > 0) {
-//             $pdf->Ln(); // Move to the next line after every 3 items
-//         }
-
-//         $barkod = $row["barkod"];
-//         $pdf->Cell(60, 10, $row["naziv"], 1, 0, 'C');
-//         $pdf->Ln();
-//         $pdf->Image("barcodes/code_$barkod.png", $pdf->GetX(), $pdf->GetY(), 50, 0, 'PNG');
-//         $pdf->Ln();
-//         $pdf->Cell(60, 10, $barkod, 1, 0, 'C');
-
-//         $counter++;
-//     }
-
-//     // Output the PDF to the browser
-//     $pdf->Output();
-// }
-
-
-
-// echo "<b>importdb.php FILE UCITAN<br></b>";
-// echo "<b>" . __FILE__ . "<br></b>";
-
 $conn = new mysqli(DB_SERVERNAME, DB_USERNAME, DB_PASSWORD, DB_NAME);
 
 if ($conn->connect_error) {
@@ -337,10 +168,7 @@ if ($conn->connect_error) {
     echo "Spajanje uspješno <br>";
 }
 
-// print_tables($conn);
-// get_all($conn);
 show_barcodes();
-// generatePDF();
 ?>
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>

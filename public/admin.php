@@ -59,7 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
     }
 </style>
 
-<body data-bs-theme="dark">
+<body data-bs-theme="light">
 
     <div class="h-100 d-flex flex-column" style="flex: 1;">
 

@@ -1,5 +1,7 @@
 <?php
 
+require_once 'generate_barcodes.php';
+
 // provjerava ako je user admin, ako nije nema pristup ovoj stranici
 checkRole("admin");
 
@@ -17,79 +19,27 @@ function getProizvodi($order = "") // funkcija koja vraca sve proizvode
     );
 }
 
+function inventuraIdRange()
+{
+    global $db;
+    return $db->select_one("SELECT MIN(id) AS min_id, MAX(id) AS max_id FROM vl_inventura;")["result"];
+}
+
 function getStanje()
 {
     global $db;
 
-    $sql = "SELECT vl_stanje.*, vl_ucionice.oznaka AS ucionica, vl_barkodovi.barkod, vl_proizvodi.naziv FROM vl_stanje
-            INNER JOIN vl_barkodovi
-            ON vl_barkodovi.proizvod_id=vl_stanje.proizvod_id
-            INNER JOIN vl_ucionice
-            ON vl_ucionice.id=vl_stanje.ucionica_id
-            INNER JOIN vl_proizvodi
-            ON vl_proizvodi.id=vl_stanje.proizvod_id";
+    $sql = "SELECT s.*, u.oznaka AS ucionica, b.barkod, p.naziv, p.slika FROM vl_stanje s
+            INNER JOIN vl_barkodovi b
+            ON b.proizvod_id=s.proizvod_id
+            INNER JOIN vl_ucionice u
+            ON u.id=s.ucionica_id
+            INNER JOIN vl_proizvodi p
+            ON p.id=s.proizvod_id";
 
     $result = $db->select($sql);
     return $result;
 }
-
-// function getPromjene($id1, $id2) // prvo novija inventura pa starija kao argumenti (id)
-// {
-//     global $db;
-
-//     function compareById($a, $b)
-//     {
-//         return $a['proizvod_id'] - $b['proizvod_id'];
-//     }
-
-//     $sql = "SELECT ime, prezime, vl_evidencija.*, vl_barkodovi.barkod, vl_users.username as username, vl_ucionice.oznaka as ucionica, vl_proizvodi.naziv
-//     FROM vl_evidencija 
-//     INNER JOIN vl_users ON vl_evidencija.user_id = vl_users.id 
-//     INNER JOIN vl_ucionice ON vl_evidencija.ucionica_id = vl_ucionice.id 
-//     INNER JOIN vl_proizvodi ON vl_evidencija.proizvod_id = vl_proizvodi.id 
-//     INNER JOIN vl_barkodovi ON vl_barkodovi.proizvod_id = vl_evidencija.proizvod_id 
-//     WHERE aktivno = 1 AND inventura_id=?";
-
-//     $promjene = array(
-//         "result" => array(),
-//         "row_count" =>  0,
-//     );
-
-//     $result1 = $db->select($sql, array($id1), key: "proizvod_id")["result"];
-//     $result2 = $db->select($sql, array($id2), key: "proizvod_id")["result"];
-
-//     foreach ($result1 as $key => $row) {
-//         $promjene["result"][$key] = $row;
-//         if (array_key_exists($key, $result2)) {
-
-//             if ($result2[$key]["ucionica"] != $row["ucionica"]) {
-//                 $promjene["result"][$key]["promjena"] = "ucionica";
-//                 $promjene["result"][$key]["ucionica"] = $result2[$key]["ucionica"] . " -> " . $row["ucionica"];
-//                 $promjene["row_count"]++;
-//             } else {
-//                 $promjene["result"][$key]["promjena"] = "nema";
-//                 $promjene["row_count"]++;
-//             }
-//         } else {
-//             $promjene["result"][$key]["promjena"] = "novo";
-//             $promjene["row_count"]++;
-//         }
-//     }
-
-//     foreach ($result2 as $key => $row) {
-//         if (!array_key_exists($key, $result1)) {
-//             $promjene["result"][$key] = $row;
-//             $promjene["result"][$key]["promjena"] = "nestalo";
-//             $promjene["row_count"]++;
-//         }
-//     }
-
-
-//     // dd($promjene["result"][239]);
-
-//     usort($promjene["result"], 'compareById');
-//     return $promjene;
-// }
 
 function getPromjene($id) // id zadnje inventure
 {
@@ -101,96 +51,116 @@ function getPromjene($id) // id zadnje inventure
     }
 
     // sql za zadnju evidenciju
-    $sql1 = "SELECT ime, prezime, vl_evidencija.*, vl_barkodovi.barkod, vl_users.username as username, vl_ucionice.id as ucionica_id, 
-        vl_ucionice.oznaka as ucionica, vl_proizvodi.naziv
-        FROM vl_evidencija 
-        INNER JOIN vl_users ON vl_evidencija.user_id = vl_users.id 
-        INNER JOIN vl_ucionice ON vl_evidencija.ucionica_id = vl_ucionice.id 
-        INNER JOIN vl_proizvodi ON vl_evidencija.proizvod_id = vl_proizvodi.id 
-        INNER JOIN vl_barkodovi ON vl_barkodovi.proizvod_id = vl_evidencija.proizvod_id 
-        WHERE vl_evidencija.aktivno = 1 AND inventura_id=?";
+    // $sql1 = "SELECT ime, prezime, e.*, b.barkod, usr.username as username, u.id as ucionica_id, 
+    //     u.oznaka as ucionica, p.naziv
+    //     FROM vl_evidencija e
+    //     INNER JOIN vl_users usr ON e.user_id = usr.id 
+    //     INNER JOIN vl_ucionice u ON e.ucionica_id = u.id 
+    //     INNER JOIN vl_proizvodi p ON e.proizvod_id = p.id 
+    //     INNER JOIN vl_barkodovi b ON b.proizvod_id = e.proizvod_id 
+    //     WHERE e.aktivno = 1 AND inventura_id=? limit 1";
+    $sql_e = "SELECT CONCAT(e.proizvod_id, '_', e.ucionica_id) as par, p.id as proizvod_id, COUNT(*) AS kolicina, b.barkod, u.id as ucionica_id,
+            u.oznaka as ucionica, p.naziv
+            FROM vl_evidencija e
+            INNER JOIN vl_users usr ON e.user_id = usr.id 
+            INNER JOIN vl_ucionice u ON e.ucionica_id = u.id 
+            INNER JOIN vl_proizvodi p ON e.proizvod_id = p.id 
+            INNER JOIN vl_barkodovi b ON b.proizvod_id = e.proizvod_id 
+            WHERE e.aktivno = 1 AND inventura_id=? 
+            GROUP BY e.proizvod_id, e.ucionica_id ORDER BY p.id";
 
     // sql za stanje
-    $sql2 = "SELECT vl_stanje.proizvod_id, vl_stanje.kolicina as kolicina, vl_barkodovi.barkod, vl_ucionice.id as ucionica_id, 
-        vl_ucionice.oznaka as ucionica, vl_proizvodi.naziv
-        FROM vl_stanje 
-        INNER JOIN vl_ucionice ON vl_stanje.ucionica_id = vl_ucionice.id 
-        INNER JOIN vl_proizvodi ON vl_stanje.proizvod_id = vl_proizvodi.id 
-        INNER JOIN vl_barkodovi ON vl_barkodovi.proizvod_id = vl_stanje.proizvod_id";
+    $sql_s = "SELECT CONCAT(s.proizvod_id, '_', s.ucionica_id) as par, s.proizvod_id as proizvod_id, s.kolicina as kolicina, b.barkod, u.id as ucionica_id, 
+        u.oznaka as ucionica, p.naziv
+        FROM vl_stanje s
+        INNER JOIN vl_ucionice u ON s.ucionica_id = u.id 
+        INNER JOIN vl_proizvodi p ON s.proizvod_id = p.id 
+        INNER JOIN vl_barkodovi b ON b.proizvod_id = s.proizvod_id 
+        WHERE s.otpisano = 0 
+        ORDER BY s.proizvod_id";
 
     $promjene = array(
         "result" => array(),
         "row_count" =>  0,
     );
 
-    $result1 = $db->select($sql1, array($id), key: "proizvod_id")["result"];
-    $result2 = $db->select($sql2, key: "proizvod_id")["result"];
+    $result_e = $db->select($sql_e, array($id), key: "par")["result"];
+    $result_s = $db->select($sql_s, key: "par")["result"];
+
+    // echo "<p class='fs-5'>";
+    // echo "Evidencija <br>";
+    // print_r($result_e);
+    // echo "</p>";
+    // echo "<br>";
+    // echo "<br>";
+    // echo "<br>";
+    // echo "<p class='fs-5'>";
+    // echo "Stanje <br>";
+    // print_r($result_s);
+    // echo "</p>";
 
     $dodano = array();
     $i = 0;
-
-    foreach ($result1 as $key => $row) {
-        $promjene["result"][$i] = $row;
+    foreach ($result_e as $key => $row_e) {
+        $promjene["result"][$i] = $row_e;
         $dodano[$i] = $key;
-        if (array_key_exists($key, $result2)) {
+        if (array_key_exists($key, $result_s)) {
 
-            if ($result2[$key]["ucionica"] != $row["ucionica"]) {
-                $promjene["result"][$i]["promjena"] = "ucionica";
-                $promjene["result"][$i]["ucionica"] = $result2[$key]["ucionica"] . " -> " . $row["ucionica"];
-                $promjene["result"][$i]["ucionica_stara"] = $result2[$key]["ucionica_id"];
-                $promjene["result"][$i]["ucionica_nova"] = $row["ucionica_id"];
+            if ($result_s[$key]["ucionica_id"] != $row_e["ucionica_id"] && $result_s[$key]["kolicina"] == $row_e["kolicina"]) {
+                // $promjene["result"][$i]["promjena"] = "ucionica";
+                // $promjene["result"][$i]["ucionica"] = $result_s[$key]["ucionica"] . " -> " . $row_e["ucionica"];
+                // $promjene["result"][$i]["ucionica_stara"] = $result_s[$key]["ucionica_id"];
+                // $promjene["result"][$i]["ucionica_nova"] = $row_e["ucionica_id"];
+                // $promjene["row_count"]++;
+            } elseif ($result_s[$key]["ucionica_id"] == $row_e["ucionica_id"] && $result_s[$key]["kolicina"] != $row_e["kolicina"]) {
+                $promjene["result"][$i]["promjena"] = "kolicina";
+                $promjene["result"][$i]["kolicina"] = $row_e["kolicina"] - $result_s[$key]["kolicina"];
+                $promjene["result"][$i]["prijasnja_kolicina"] = $result_s[$key]["kolicina"];
                 $promjene["row_count"]++;
+            } elseif ($result_s[$key]["ucionica_id"] != $row_e["ucionica_id"] && $result_s[$key]["kolicina"] != $row_e["kolicina"]) {
+                // $promjene["result"][$i]["promjena"] = "sve";
+                // $promjene["row_count"]++;
             } else {
                 $promjene["result"][$i]["promjena"] = "nema";
                 $promjene["row_count"]++;
             }
         } else {
             $promjene["result"][$i]["promjena"] = "novo";
+            $promjene["result"][$i]["kolicina"] = $row_e["kolicina"];
             $promjene["row_count"]++;
         }
         $i++;
+
+        // $promjene["result"][$i] = $row_e;
+        // $dodano[$i] = $key;
+        // if (array_key_exists($key, $result_s)) {
+
+        //     if ($result_s[$key]["ucionica"] != $row_e["ucionica"]) {
+        //         $promjene["result"][$i]["promjena"] = "ucionica";
+        //         $promjene["result"][$i]["ucionica"] = $result_s[$key]["ucionica"] . " -> " . $row_e["ucionica"];
+        //         $promjene["result"][$i]["ucionica_stara"] = $result_s[$key]["ucionica_id"];
+        //         $promjene["result"][$i]["ucionica_nova"] = $row_e["ucionica_id"];
+        //         $promjene["row_count"]++;
+        //     } else {
+        //         $promjene["result"][$i]["promjena"] = "nema";
+        //         $promjene["row_count"]++;
+        //     }
+        // } else {
+        //     $promjene["result"][$i]["promjena"] = "novo";
+        //     $promjene["row_count"]++;
+        // }
+        // $i++;
     }
 
-    foreach ($result2 as $key => $row) {
-        if (!array_key_exists($key, $result1)) {
-            $promjene["result"][$i] = $row;
+    foreach ($result_s as $key => $row_s) {
+        if (!array_key_exists($key, $result_e)) {
+            $promjene["result"][$i] = $row_s;
             $promjene["result"][$i]["promjena"] = "nestalo";
+            $promjene["result"][$i]["kolicina"] = -$row_s["kolicina"];
             $promjene["row_count"]++;
             $i++;
         }
     }
-
-
-    // foreach ($result1 as $key => $row) {
-    //     $promjene["result"][$key] = $row;
-    //     if (array_key_exists($key, $result2)) {
-
-    //         if ($result2[$key]["ucionica"] != $row["ucionica"]) {
-    //             $promjene["result"][$key]["promjena"] = "ucionica";
-    //             $promjene["result"][$key]["ucionica"] = $result2[$key]["ucionica"] . " -> " . $row["ucionica"];
-    //             $promjene["result"][$key]["ucionica_stara"] = $result2[$key]["ucionica_id"];
-    //             $promjene["result"][$key]["ucionica_nova"] = $row["ucionica_id"];
-    //             $promjene["row_count"]++;
-    //         } else {
-    //             $promjene["result"][$key]["promjena"] = "nema";
-    //             $promjene["row_count"]++;
-    //         }
-    //     } else {
-    //         $promjene["result"][$key]["promjena"] = "novo";
-    //         $promjene["row_count"]++;
-    //     }
-    // }
-
-    // foreach ($result2 as $key => $row) {
-    //     if (!array_key_exists($key, $result1)) {
-    //         $promjene["result"][$key] = $row;
-    //         $promjene["result"][$key]["promjena"] = "nestalo";
-    //         $promjene["row_count"]++;
-    //     }
-    // }
-
-
-    // dd($promjene["result"][239]);
 
     usort($promjene["result"], 'compareById');
     return $promjene;
@@ -204,7 +174,7 @@ function getEvidencija() // funkcija koja vraca evidentirane proizvode sa dodatn
 
     $where_u = "";
     $where_p = "";
-    $order_by = " ORDER BY vl_evidencija.id ASC;";
+    $order_by = " ORDER BY vl_evidencija.id DESC;";
     $where_i = " AND vl_evidencija.inventura_id=" . zadnjaInventura();
 
     if ($u != "") {
@@ -269,7 +239,7 @@ function getProfesori() // vraca sve profesore tj. usere
     return $result;
 }
 
-function profesorById($id) // vraca profesora ili usera prema id-u
+function profesorById($id) // vraca profesora tj. usera prema id-u
 {
     global $db;
 
@@ -291,7 +261,7 @@ function getTipovi() // vraca sve tipove proizvoda
 {
     global $db;
 
-    $result = $db->select("SELECT * FROM vl_tipovi_proizvoda");
+    $result = $db->select("SELECT tip_id, COUNT(*) AS kolicina, vl_tipovi_proizvoda.tip FROM vl_proizvodi, vl_tipovi_proizvoda WHERE vl_tipovi_proizvoda.id=vl_proizvodi.tip_id GROUP BY tip_id;");
 
     return $result;
 }
@@ -417,6 +387,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $id = $_POST["id"];
 
         $db->update("UPDATE vl_ucionice SET oznaka=?, opis=? WHERE id=?", array($oznaka, $opis, $id));
+
+        header("Location: ucionice");
     }
 
     if (isset($_POST["pokreni_inventuru"])) {
@@ -443,6 +415,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             $sql = "INSERT INTO vl_stanje (proizvod_id, ucionica_id, kolicina) VALUES (?, ?, ?)";
             $db->insert($sql, array($insert_id, post("ucionica"), post("kolicina")));
+
+            generate_barcodes_proizvodi();
 
             $file_name = $_FILES["slika"]["name"];
             $temp_name = $_FILES["slika"]["tmp_name"];
@@ -474,6 +448,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             } else {
                 $proizvod_upload_msg = "Krivi format datoteke, dopuštene samo slike";
             }
+
+            header("Location: proizvodi");
         }
     }
 

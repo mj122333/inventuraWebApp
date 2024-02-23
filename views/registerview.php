@@ -67,7 +67,10 @@ if (isset($_COOKIE["sessionid"])) {
     </script>
 </head>
 
-<body data-bs-theme="dark" style="height: 100vh;" class="d-flex justify-content-center align-items-center">
+<body data-bs-theme="light" style="height: 100vh;" class="d-flex justify-content-center align-items-center">
+<script defer>
+        $("body").attr('data-bs-theme', initialTheme);
+    </script>
 
     <div id="<?php echo ($emailErr) ? 'shakeDiv' : ''; ?>" class="container border rounded py-3 my-5 col-lg-4">
         <form class="needs-validation" novalidate method="POST" action="register">
@@ -101,7 +104,7 @@ if (isset($_COOKIE["sessionid"])) {
             <div class="input-group mb-3">
                 <span class="input-group-text">password</span>
                 <input type="password" class="form-control" id="password" name="password" placeholder="password" required>
-                <button class="btn btn-success" id="show-pass" onclick="showPassword()" type="button">Prikaži</button>
+                <button class="btn btn-primary" id="show-pass" onclick="showPassword()" type="button">Prikaži</button>
             </div>
 
             <div class="form-check form-switch">
@@ -117,7 +120,7 @@ if (isset($_COOKIE["sessionid"])) {
                 </div>
             </div>
 
-            <button class="btn btn-success w-100" type="submit">Registriraj se</button>
+            <button class="btn btn-primary w-100" type="submit">Registriraj se</button>
         </form>
 
         <small>Imate račun?</small>

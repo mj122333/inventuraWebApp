@@ -65,10 +65,13 @@
     </script>
 </head>
 
-<body data-bs-theme="dark" style="height: 100vh;" class="d-flex flex-column justify-content-center align-items-center">
+<body data-bs-theme="light" style="height: 100vh;" class="d-flex flex-column justify-content-center align-items-center bg-tertiary">
     <!-- <h1>INVENTURA</h1> -->
+    <script defer>
+        $("body").attr('data-bs-theme', initialTheme);
+    </script>
 
-    <div id="<?php echo ($loginErr) ? 'shakeDiv' : ''; ?>" class="container border rounded py-3 my-5 col-lg-4">
+    <div id="<?php echo ($loginErr) ? 'shakeDiv' : ''; ?>" class="container shadow-sm rounded py-3 my-5 col-lg-4 bg-main">
         <!-- <form method="POST" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>"> -->
         <form method="POST" action="login">
             <!-- <?php echo $_SERVER['PHP_SELF']; ?> -->
@@ -86,16 +89,15 @@
             <div class="input-group mb-3">
                 <span class="input-group-text">password</span>
                 <input type="password" class="form-control" id="password" name="password" placeholder="password" required>
-                <button class="btn btn-success" id="show-pass" onclick="showPassword()" type="button">Prikaži</button>
+                <button class="btn btn-primary" id="show-pass" onclick="showPassword()" type="button">Prikaži</button>
             </div>
 
-            <button class="btn btn-success w-100" type="submit">Prijavi se</button>
+            <button class="btn btn-primary w-100" type="submit">Prijavi se</button>
         </form>
 
         <small>Nemate račun?</small>
         <a href="<?php echo DS . APPFOLDER . DS ?>register" class="link-secondary link-underline-secondary link-underline-opacity-0 link-underline-opacity-75-hover"><small>Kreirajte ga!</small></a>
     </div>
-    <!-- <img src="assets/smartphone_mockup.svg" alt=""> -->
 
     <script>
         shakeDiv();

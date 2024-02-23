@@ -46,9 +46,9 @@ foreach ($result["result"] as $row) {
 }
 ?>
 
-<!-- <body data-bs-theme="dark" class="d-flex justify-content-center align-items-center flex-column"> -->
+<!-- <body data-bs-theme="light" class="d-flex justify-content-center align-items-center flex-column"> -->
 
-<body data-bs-theme="dark">
+<body data-bs-theme="light">
 
     <!-- <?php print_r($_SESSION); ?> -->
 

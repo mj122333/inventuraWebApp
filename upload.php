@@ -34,22 +34,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                             $user_id = $_POST["user"];
 
-                            // zapis evidencije proizvoda
-                            // $sql = "INSERT INTO your_table (column1, column2, column3) VALUES (1, 2, 'value2')
-                            // ON DUPLICATE KEY UPDATE column3 = 'value2';";
-                            
-                            // SELECT
-                            //     proizvod_id,
-                            //     ucionica_id,
-                            //     COUNT(*) AS kolicina
-                            // FROM
-                            //     vl_evidencija
-                            // WHERE
-                            //     inventura_id=32
-                            // GROUP BY
-                            //     proizvod_id,
-                            //     ucionica_id
-
                             $sql = "INSERT INTO vl_evidencija (proizvod_id, ucionica_id, datum, vrijeme, user_id, inventura_id) VALUES (?, ?, ?, ?, ?, ?)";
                             $db->insert($sql, array($proizvod_id, $ucionica_id, $currentDate, $currentTime, $user_id, $inventura_id["result"]["id"]));
 
@@ -89,5 +73,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $db->mysql_error("ERROR INSERT", $e);
         }
     }
-    http_response_code(200);
+    // http_response_code(200);
 }

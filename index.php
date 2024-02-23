@@ -11,7 +11,7 @@ $url = short_url($url);
 $route = split_url($url)[0] != "" ? split_url($url)[0] : "home";
 $sub_route = isset(split_url($url)[1]) ? split_url($url)[1] : "";
 
-// $db->mysql_error("ROUTE", $route . DS . $sub_route);
+$db->mysql_error("ROUTE", $route . DS . $sub_route);
 
 $routes = [
     "home" => "controllers" . DS . "homecontroller.php", // ima kontroller
@@ -29,6 +29,7 @@ $routes = [
 
     "importdb" => "importdb.php",
     "upload" => "upload.php",
+    "api" => "api.php",
 
     "bf" => "bf.php",
 ];

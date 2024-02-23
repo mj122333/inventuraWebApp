@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand bg-body border-bottom border-secondary">
+<nav class="navbar navbar-expand bg-body border-bottom border-1">
 
     <div class="container-fluid">
         <!-- <a class="navbar-brand" href="<?php echo DS . APPFOLDER . DS ?>home">Početna</a> -->
@@ -24,7 +24,7 @@
             </ul>
 
             <?php if (isset($_COOKIE["sessionid"])) : ?>
-                <a class="btn btn-danger" href="<?php echo DS . APPFOLDER . DS ?>logout">Odjava</a>
+                <a class="btn btn-danger" href="<?php echo DS . APPFOLDER . DS ?>logout">Odjava <i class="bi bi-box-arrow-right"></i></a>
             <?php endif; ?>
         </div>
     </div>

@@ -17,9 +17,12 @@
     } */
 </style>
 
-<!-- <body data-bs-theme="dark" class="d-flex justify-content-center align-items-center flex-column"> -->
+<!-- <body data-bs-theme="light" class="d-flex justify-content-center align-items-center flex-column"> -->
 
-<body data-bs-theme="dark">
+<body data-bs-theme="light">
+<script defer>
+        $("body").attr('data-bs-theme', initialTheme);
+    </script>
 
     <div class="h-100 d-flex flex-column" style="flex: 1;">
 
@@ -42,10 +45,10 @@
 
                                 <span class="d-none d-sm-flex input-group-text">Opis</span>
                                 <input required type="text" class="form-control" name="opis" placeholder="opis učionice" value="<?= $_GET["opis"] ?>">
-                                <button class="btn btn-success" type="submit" name="uredi_ucionicu">Uredi</button>
+                                <button class="btn btn-primary" type="submit" name="uredi_ucionicu">Uredi</button>
                             </div>
                             <input hidden type="text" class="form-control" name="id" value="<?= $_GET["id"] ?>">
-                            <a href="ucionice" class="btn btn-warning">Dodavanje učionice</a>
+                            <a href="ucionice" class="btn btn-outline-primary">Dodavanje učionice</a>
 
                         <?php else : ?>
 
@@ -56,7 +59,7 @@
 
                                 <span class="d-none d-sm-flex input-group-text">Opis</span>
                                 <input required type="text" class="form-control" name="opis" placeholder="opis učionice">
-                                <button class="btn btn-success" type="submit" name="dodaj_ucionicu">Dodaj</button>
+                                <button class="btn btn-primary" type="submit" name="dodaj_ucionicu">Dodaj</button>
                             </div>
 
                         <?php endif; ?>
@@ -71,16 +74,16 @@
                             foreach ($result["result"] as $row) { ?>
 
                                 <li class="list-group-item">
-                                    <div class="float-start">
-                                        <a href="evidencija?u=<?= $row["oznaka"] ?>&i=<?= $zadnja_inventura ?>" class="link-secondary link-underline-opacity-0 text-white"><?= $row["oznaka"] ?>&nbsp;-&nbsp;<?= $row["opis"] ?></a>
-                                        <a href="ucionice?action=edit&oznaka=<?= $row["oznaka"] ?>&id=<?= $row["id"] ?>&opis=<?= $row["opis"] ?>"><i class="bi bi-pen"></i></a>
+                                    <div class="float-start" style="max-width: 50%; text-overflow: ellipsis;">
+                                        <a href="evidencija?u=<?= $row["oznaka"] ?>&i=<?= $zadnja_inventura ?>" class="link-secondary link-underline-opacity-0 text-main"><?= $row["oznaka"] ?>&nbsp;-&nbsp;<?= $row["opis"] ?></a>
+                                        <a data-tooltip="Uredi učionicu" class="btn btn-outline-primary" href="ucionice?action=edit&oznaka=<?= $row["oznaka"] ?>&id=<?= $row["id"] ?>&opis=<?= $row["opis"] ?>"><i class=" bi bi-pen"></i></a>
                                     </div>
 
                                     <div style="cursor: pointer;" class="float-end d-flex flex-column open-modal" data-value="<?= $row["barkod"] ?>" data-image="<?php echo DS . APPFOLDER . DS ?>barcodes/code_<?php echo $row["barkod"] ?>.svg">
                                         <img style="background-color: white; height: 26px;" class="img-thumbnail img-fluid" src="<?php echo DS . APPFOLDER . DS ?>barcodes/code_<?php echo $row["barkod"] ?>.svg" alt="barcode alt">
                                         <span class="font-monospace"><?= $row["barkod"] ?></span>
                                     </div>
-
+    
                                 </li>
 
                         <?php }
@@ -88,9 +91,9 @@
                         ?>
                     </ul>
                     <?php if ($result['row_count'] == 0) : ?>
-                        <small class="text-secondary">Lista je prazna</small>
+                        <small class="text-primary">Lista je prazna</small>
                     <?php else : ?>
-                        <small class="text-secondary">Popis učionica</small>
+                        <small class="text-primary">Popis učionica</small>
                     <?php endif; ?>
 
 
@@ -106,7 +109,7 @@
                             <span class="input-group-text"><span class="d-none d-sm-flex">Tip</span></span>
                             <input required type="text" class="form-control" name="tip_naziv" placeholder="tip">
 
-                            <button class="btn btn-success" type="submit" name="dodaj_tip">Dodaj</button>
+                            <button class="btn btn-primary" type="submit" name="dodaj_tip">Dodaj</button>
                         </div>
 
 
@@ -122,6 +125,7 @@
                                 <li class="list-group-item">
                                     <div class="float-start">
                                         <span><?= $row["tip"] ?></span>
+                                        <span class="badge text-bg-primary"><?= $row["kolicina"] ?></span>
                                     </div>
                                 </li>
 
@@ -130,18 +134,15 @@
                         ?>
                     </ul>
                     <?php if ($result['row_count'] == 0) : ?>
-                        <small class="text-secondary">Lista je prazna</small>
+                        <small class="text-primary">Lista je prazna</small>
                     <?php else : ?>
-                        <small class="text-secondary">Popis tipova proizvoda</small>
+                        <small class="text-primary">Popis tipova proizvoda</small>
                     <?php endif; ?>
-
 
                 </div>
             </div>
         </main>
     </div>
-
-    <!-- <span id="dodajTip" class="btn btn-sm btn-success col-12 col-md-2">Dodaj tip proizvoda <i class="bi bi-box-arrow-up-right"></i></span> -->
 
 
     <!-- bootstrap modal -->
@@ -162,6 +163,13 @@
                 $('#modal-image').attr('src', imageSrc);
                 $('#modal-text').text(codeValue);
                 $('#barcode-modal').modal('show');
+            });
+
+            $('[data-tooltip]').each(function() {
+                $(this).tooltip({
+                    placement: 'top',
+                    title: $(this).data('tooltip')
+                });
             });
         });
     </script>

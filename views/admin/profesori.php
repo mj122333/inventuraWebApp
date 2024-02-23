@@ -38,39 +38,44 @@
     }
 </style>
 
-<body data-bs-theme="dark">
+<body data-bs-theme="light">
+    <script defer>
+        $("body").attr('data-bs-theme', initialTheme);
+    </script>
 
     <div class="h-100 d-flex flex-column" style="flex: 1;">
 
         <?php include 'views/header.php'; ?>
 
-        <main class="d-flex flex-row h-100">
+        <main class="d-flex flex-row h-100" style="overflow: hidden;">
 
             <?php include 'views/sidebar.php'; ?>
 
-            <div class="container border rounded py-3 col-11 col-md-6 my-5">
+            <div class="container col-11 col-md-8" style="overflow-y: auto;">
 
-                <ul class="list-group list-group-flush overflow-auto" style="max-height: 50vh;">
+                <div class="row my-2">
                     <?php
                     $result = getProfesori();
 
                     if ($result['row_count'] > 0) {
                         foreach ($result["result"] as $row) { ?>
 
-                            <li class="list-group-item">
-                                <a href="evidencija?p=<?= $row["id"] ?>&i=<?= $zadnja_inventura ?>" class="link-secondary link-underline-opacity-0 text-white"><?= $row["ime"] . " " . $row["prezime"] . " (" . $row["username"] . ")" ?></a>
-                                <span class="float-end <?php echo $row["role"] == "admin" ? "text-danger" : "text-success" ?>"><?= $row["role"] ?></span>
-                            </li>
+                            <div class="card border-0 shadow-sm col-3 pt-2 mx-3 mb-5">
+                                <div class="rounded" style="display: flex; align-items: center; justify-content: center; overflow: hidden; height: 128px;">
+                                    <img src="<?php echo DS . APPFOLDER . DS ?>images/proizvod_422.jpg" class="card-img-top" alt="">
+                                </div>
+                                <div class="card-body p-0">
+                                    <h5 class="card-title"><?= $row["ime"] . " " . $row["prezime"] . " (" . $row["username"] . ")" ?></h5>
+                                    <p class="card-text fw-bold <?php echo $row["role"] == "admin" ? "text-danger" : "text-success" ?>"><?= $row["role"] ?></p>
+                                    <a href="evidencija?p=<?= $row["id"] ?>&i=<?= $zadnja_inventura ?>" class="link-secondary link-underline-secondary link-underline-opacity-0 link-underline-opacity-75-hover">Evidencija od korisnika</a>
+                                </div>
+                            </div>
 
                     <?php }
                     }
                     ?>
-                </ul>
-                <?php if ($result['row_count'] == 0) : ?>
-                    <small class="text-secondary">Lista je prazna</small>
-                <?php else : ?>
-                    <small class="text-secondary">Popis profesora</small>
-                <?php endif; ?>
+                </div>
+
             </div>
         </main>
 

@@ -42,8 +42,7 @@ function promjenaStanja(proizvodId, staraUcionica, novaUcionica) {
 }
 
 
-function otpisStanja(proizvodId)
-{
+function otpisStanja(proizvodId) {
     const sessionCookie = getCookie("sessionid"); // TODO provjeriti ako je admin
     const requestOptions = {
         method: 'POST',

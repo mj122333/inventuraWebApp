@@ -46,7 +46,10 @@
 </style>
 
 
-<body data-bs-theme="dark">
+<body data-bs-theme="light">
+<script defer>
+        $("body").attr('data-bs-theme', initialTheme);
+    </script>
 
     <div class="h-100 d-flex flex-column" style="flex: 1;">
 
@@ -55,7 +58,7 @@
         <main class="d-flex flex-row" style="flex: 1;">
             <?php include 'sidebar.php'; ?>
 
-            <div id="pozadina" class="h-100 w-100">
+            <div id="pozadina" class="h-100 w-100 bg-tertiary">
 
                 <?php if (true) : ?>
                     <!-- <img src="<?php echo DS . APPFOLDER . DS ?>favicon/logo_light_orange.svg" alt="Logo SVG" class="mx-auto" /> -->

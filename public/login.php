@@ -115,7 +115,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
-<body data-bs-theme="dark" style="height: 100vh;" class="d-flex justify-content-center align-items-center">
+<body data-bs-theme="light" style="height: 100vh;" class="d-flex justify-content-center align-items-center">
 
     <div id="<?php echo ($loginErr) ? 'shakeDiv' : ''; ?>" class="container border rounded py-3 my-5 col-lg-4">
         <form method="POST" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
