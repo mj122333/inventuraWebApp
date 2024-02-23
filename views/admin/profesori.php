@@ -69,8 +69,11 @@
                                         <p class="card-text fw-semibold <?php echo $row["role"] == "admin" ? "text-danger" : "text-success" ?>"><?= $row["role"] ?></p>
                                     </a>
 
-                                    <button class="btn btn-primary m-3" onclick="changeRole(<?= $row['id'] ?>, '<?= $row['role'] == 'admin' ? 'user' : 'admin' ?>')">Promijeni ulogu</button>
-                                    
+                                    <?php if ($row["id"] != $_SESSION["id"]) : ?>
+                                        <button class="btn btn-primary m-3" onclick="changeRole(<?= $row['id'] ?>, '<?= $row['role'] == 'admin' ? 'user' : 'admin' ?>')">Promijeni ulogu</button>
+                                    <?php endif; ?>
+
+
                                 </div>
                             </div>
 
