@@ -61,7 +61,7 @@
 
             <div class="container-fluid mx-0 p-3 h-100 bg-tertiary" style="font-size: 10px">
 
-                <?php $result = getPromjene(32, 31); ?>
+                <?php $result = getPromjene($zadnja_inventura); ?>
                 <?php if (checkInventura()) : ?>
                     <h4 class="alert alert-danger col-12 col-sm-6 col-lg-4">Inventura <i>#<?= $zadnja_inventura ?></i> još traje</h1>
                     <?php else : ?>

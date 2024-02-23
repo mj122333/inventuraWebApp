@@ -91,7 +91,17 @@
                         </div>
                     </a>
 
-                    <a style="height: fit-content;" class="col-12 col-md-3 link-underline link-underline-opacity-0" href="<?php echo DS . APPFOLDER . DS ?>admin/stanje">
+                    <a style="height: fit-content;" class="col-12 col-md-3 link-underline link-underline-opacity-0" href="<?php echo DS . APPFOLDER . DS ?>admin/profesori">
+                        <div class="card border">
+                            <div class="card-body">
+                                <h5 class="btn btn-icon"><i class="bi bi-person"></i></h5>
+                                <p class="card-text fw-semibold">Broj profesora</p>
+                                <h1 id="count-up-profesori" class="fw-bold"></h1>
+                            </div>
+                        </div>
+                    </a>
+
+                    <div style="height: fit-content;" class="col-12 col-md-6">
                         <div class="card border">
                             <div class="card-body">
                                 <h5 class="btn btn-icon"><i class="bi bi-stopwatch"></i></h5>
@@ -112,6 +122,16 @@
                                         </button>
                                     <?php } ?>
                                 </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a style="height: fit-content;" class="col-12 col-md-3 link-underline link-underline-opacity-0" href="<?php echo DS . APPFOLDER . DS ?>admin/usporedba">
+                        <div class="card border">
+                            <div class="card-body">
+                                <h5 class="btn btn-icon"><i class="bi bi-arrow-left-right"></i></h5>
+                                <p class="card-text fw-semibold">Usporedba</p>
+                                <p class="card-text text-success">Prikaz usporedbi zadnje evidencije i stanja</p>
                             </div>
                         </div>
                     </a>
@@ -148,63 +168,6 @@
                         </div>
                     </div>
 
-                    <!-- <div class="col-12 col-md-6">
-                        <div class="card border">
-                            <div class="card-body">
-                                <h5 class="card-title">Monthly Target</h5>
-                                <p class="card-text">Target you've set for each month</p>
-                                <div class="progress-circle p75">
-                                    <span>75.55%</span>
-                                    <div class="left-half-clipper">
-                                        <div class="first50-bar"></div>
-                                        <div class="value-bar"></div>
-                                    </div>
-                                </div>
-                                <p class="card-text text-success">(+10%) You earn* $5287 today, it's higher than last month! Keep up your good trends!</p>
-                                <table class="table table-sm">
-                                    <tr>
-                                        <td>Target</td>
-                                        <td>Revenue</td>
-                                        <td>Today</td>
-                                    </tr>
-                                    <tr>
-                                        <td>$20k</td>
-                                        <td>$16k</td>
-                                        <td>$1.5k</td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-md-4">
-                        <div class="card border">
-                            <div class="card-body">
-                                <h5 class="card-title">Evidencija</h5>
-                                <p class="card-text">Target you've set for each month</p>
-                                <div class="progress-circle p75">
-                                    <span>75.55%</span>
-                                    <div class="left-half-clipper">
-                                        <div class="first50-bar"></div>
-                                        <div class="value-bar"></div>
-                                    </div>
-                                </div>
-                                <p class="card-text text-success">(+10%) You earn* $5287 today, it's higher than last month! Keep up your good trends!</p>
-                                <table class="table table-sm">
-                                    <tr>
-                                        <td>Target</td>
-                                        <td>Revenue</td>
-                                        <td>Today</td>
-                                    </tr>
-                                    <tr>
-                                        <td>$20k</td>
-                                        <td>$16k</td>
-                                        <td>$1.5k</td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                    </div> -->
                 </div>
             </div>
 
@@ -425,8 +388,12 @@
 
         const c2 = new CountUp('count-up-evidencija', 0, <?= getEvidencija()["row_count"]; ?>);
         c2.start();
+
         const c3 = new CountUp('count-up-stanje', 0, <?= $db->select_one("SELECT SUM(kolicina) AS kolicina_sum FROM vl_stanje;")["result"]["kolicina_sum"]; ?>);
         c3.start();
+
+        const c4 = new CountUp('count-up-profesori', 0, <?= getProfesori()["row_count"]; ?>);
+        c4.start();
     });
 
 

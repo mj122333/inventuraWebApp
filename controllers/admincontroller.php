@@ -84,7 +84,7 @@ function getPromjene($id) // id zadnje inventure
         "row_count" =>  0,
     );
 
-    $result_e = $db->select($sql_e, array($id), key: "par")["result"];
+    $result_e = $db->select($sql_e, array($id), key: "par");
     $result_s = $db->select($sql_s, key: "par")["result"];
 
     // echo "<p class='fs-5'>";
@@ -101,57 +101,59 @@ function getPromjene($id) // id zadnje inventure
 
     $dodano = array();
     $i = 0;
-    foreach ($result_e as $key => $row_e) {
-        $promjene["result"][$i] = $row_e;
-        $dodano[$i] = $key;
-        if (array_key_exists($key, $result_s)) {
+    if ($result_e["row_count"] > 0) {
+        $result_e = $result_e["result"];
+        foreach ($result_e as $key => $row_e) {
+            $promjene["result"][$i] = $row_e;
+            $dodano[$i] = $key;
+            if (array_key_exists($key, $result_s)) {
 
-            if ($result_s[$key]["ucionica_id"] != $row_e["ucionica_id"] && $result_s[$key]["kolicina"] == $row_e["kolicina"]) {
-                // $promjene["result"][$i]["promjena"] = "ucionica";
-                // $promjene["result"][$i]["ucionica"] = $result_s[$key]["ucionica"] . " -> " . $row_e["ucionica"];
-                // $promjene["result"][$i]["ucionica_stara"] = $result_s[$key]["ucionica_id"];
-                // $promjene["result"][$i]["ucionica_nova"] = $row_e["ucionica_id"];
-                // $promjene["row_count"]++;
-            } elseif ($result_s[$key]["ucionica_id"] == $row_e["ucionica_id"] && $result_s[$key]["kolicina"] != $row_e["kolicina"]) {
-                $promjene["result"][$i]["promjena"] = "kolicina";
-                $promjene["result"][$i]["kolicina"] = $row_e["kolicina"] - $result_s[$key]["kolicina"];
-                $promjene["result"][$i]["prijasnja_kolicina"] = $result_s[$key]["kolicina"];
-                $promjene["row_count"]++;
-            } elseif ($result_s[$key]["ucionica_id"] != $row_e["ucionica_id"] && $result_s[$key]["kolicina"] != $row_e["kolicina"]) {
-                // $promjene["result"][$i]["promjena"] = "sve";
-                // $promjene["row_count"]++;
+                if ($result_s[$key]["ucionica_id"] != $row_e["ucionica_id"] && $result_s[$key]["kolicina"] == $row_e["kolicina"]) {
+                    // $promjene["result"][$i]["promjena"] = "ucionica";
+                    // $promjene["result"][$i]["ucionica"] = $result_s[$key]["ucionica"] . " -> " . $row_e["ucionica"];
+                    // $promjene["result"][$i]["ucionica_stara"] = $result_s[$key]["ucionica_id"];
+                    // $promjene["result"][$i]["ucionica_nova"] = $row_e["ucionica_id"];
+                    // $promjene["row_count"]++;
+                } elseif ($result_s[$key]["ucionica_id"] == $row_e["ucionica_id"] && $result_s[$key]["kolicina"] != $row_e["kolicina"]) {
+                    $promjene["result"][$i]["promjena"] = "kolicina";
+                    $promjene["result"][$i]["kolicina"] = $row_e["kolicina"] - $result_s[$key]["kolicina"];
+                    $promjene["result"][$i]["prijasnja_kolicina"] = $result_s[$key]["kolicina"];
+                    $promjene["row_count"]++;
+                } elseif ($result_s[$key]["ucionica_id"] != $row_e["ucionica_id"] && $result_s[$key]["kolicina"] != $row_e["kolicina"]) {
+                    // $promjene["result"][$i]["promjena"] = "sve";
+                    // $promjene["row_count"]++;
+                } else {
+                    $promjene["result"][$i]["promjena"] = "nema";
+                    $promjene["row_count"]++;
+                }
             } else {
-                $promjene["result"][$i]["promjena"] = "nema";
+                $promjene["result"][$i]["promjena"] = "novo";
+                $promjene["result"][$i]["kolicina"] = $row_e["kolicina"];
                 $promjene["row_count"]++;
             }
-        } else {
-            $promjene["result"][$i]["promjena"] = "novo";
-            $promjene["result"][$i]["kolicina"] = $row_e["kolicina"];
-            $promjene["row_count"]++;
+            $i++;
+
+            // $promjene["result"][$i] = $row_e;
+            // $dodano[$i] = $key;
+            // if (array_key_exists($key, $result_s)) {
+
+            //     if ($result_s[$key]["ucionica"] != $row_e["ucionica"]) {
+            //         $promjene["result"][$i]["promjena"] = "ucionica";
+            //         $promjene["result"][$i]["ucionica"] = $result_s[$key]["ucionica"] . " -> " . $row_e["ucionica"];
+            //         $promjene["result"][$i]["ucionica_stara"] = $result_s[$key]["ucionica_id"];
+            //         $promjene["result"][$i]["ucionica_nova"] = $row_e["ucionica_id"];
+            //         $promjene["row_count"]++;
+            //     } else {
+            //         $promjene["result"][$i]["promjena"] = "nema";
+            //         $promjene["row_count"]++;
+            //     }
+            // } else {
+            //     $promjene["result"][$i]["promjena"] = "novo";
+            //     $promjene["row_count"]++;
+            // }
+            // $i++;
         }
-        $i++;
-
-        // $promjene["result"][$i] = $row_e;
-        // $dodano[$i] = $key;
-        // if (array_key_exists($key, $result_s)) {
-
-        //     if ($result_s[$key]["ucionica"] != $row_e["ucionica"]) {
-        //         $promjene["result"][$i]["promjena"] = "ucionica";
-        //         $promjene["result"][$i]["ucionica"] = $result_s[$key]["ucionica"] . " -> " . $row_e["ucionica"];
-        //         $promjene["result"][$i]["ucionica_stara"] = $result_s[$key]["ucionica_id"];
-        //         $promjene["result"][$i]["ucionica_nova"] = $row_e["ucionica_id"];
-        //         $promjene["row_count"]++;
-        //     } else {
-        //         $promjene["result"][$i]["promjena"] = "nema";
-        //         $promjene["row_count"]++;
-        //     }
-        // } else {
-        //     $promjene["result"][$i]["promjena"] = "novo";
-        //     $promjene["row_count"]++;
-        // }
-        // $i++;
     }
-
     foreach ($result_s as $key => $row_s) {
         if (!array_key_exists($key, $result_e)) {
             $promjene["result"][$i] = $row_s;
@@ -261,7 +263,11 @@ function getTipovi() // vraca sve tipove proizvoda
 {
     global $db;
 
-    $result = $db->select("SELECT tip_id, COUNT(*) AS kolicina, vl_tipovi_proizvoda.tip FROM vl_proizvodi, vl_tipovi_proizvoda WHERE vl_tipovi_proizvoda.id=vl_proizvodi.tip_id GROUP BY tip_id;");
+    // $result = $db->select("SELECT tip_id, COUNT(*) AS kolicina, vl_tipovi_proizvoda.tip FROM vl_proizvodi, vl_tipovi_proizvoda WHERE vl_tipovi_proizvoda.id=vl_proizvodi.tip_id GROUP BY tip_id;");
+    $result = $db->select("SELECT vl_tipovi_proizvoda.id AS tip_id, COALESCE(COUNT(vl_proizvodi.tip_id), 0) AS kolicina, vl_tipovi_proizvoda.tip
+    FROM vl_tipovi_proizvoda
+    LEFT JOIN vl_proizvodi ON vl_tipovi_proizvoda.id = vl_proizvodi.tip_id
+    GROUP BY vl_tipovi_proizvoda.id;");
 
     return $result;
 }
@@ -379,6 +385,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $barkod = "200000" . str_pad($insert_id, 6, '0', STR_PAD_LEFT);
         $barkod .= calculateEAN13CheckDigit($barkod);
         $db->update("UPDATE vl_ucionice SET barkod=? WHERE id=?", array($barkod, $insert_id));
+
+        generate_barcodes_ucionice();
     }
 
     if (isset($_POST["uredi_ucionicu"])) {

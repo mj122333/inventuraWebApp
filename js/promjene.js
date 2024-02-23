@@ -33,7 +33,7 @@ function promjenaStanja(vrsta, proizvod_id, ucionica_id, kolicina) {
     fetch(url, requestOptions)
         .then(response => response.text())
         .then(data => {
-            location.reload();
+            // location.reload();
 
             // console.log(data)
         })
